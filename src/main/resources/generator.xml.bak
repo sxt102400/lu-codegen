@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <properties location="jdbc.properties"/>
+
+    <jdbc>
+        <!-- 模版数据库连接配置 -->
+        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </jdbc>
+
+    <template>
+        <!-- 模版基本配置 -->
+        <property name="codegen.module" value="icy-codegen"></property>
+        <property name="template.dir" value="template/freemarker"></property>
+        <property name="override" value="false"></property>
+        <property name="author" value="${jdbc.driverClassName}"></property>
+    </template>
+
+    <!--  生成到的项目目录配置 -->
+
+    <!--
+        project.name    maven项目名称
+        module.name     maven模块名称
+        sources.folder      src目录
+        resources.folder    资源目录
+        basePackage         基本包目录
+        subPackage          类包目录
+        file.template          模版文件名
+        ${entity.package}=basePackage+"."+subPackage
+     -->
+    <project name="icy-demo" >
+
+        <module name="icy-demo-service">
+            <sources folder="src/main/java" basePackage="com.asiainfo">
+                <file subPackage="sys.bean.entity" template="${className}.java"></file>
+                <file subPackage="sys.bean.mapper" template="${className}Dao.java"></file>
+                <file subPackage="sys.bean.service" template="${className}Service.java"></file>
+                <file subPackage="sys.bean.service.impl" template="${className}ServiceImpl.java"></file>
+                <file subPackage="sys.web"  template="${className}Controller.java"></file>
+            </sources>
+            <resources folder="src/main/resources" basePackage="com.mysql">
+                <file subPackage="mapper" templ="${className}Mapper.xml"></file>
+            </resources>
+         </module>
+
+        <module name="icy-demo-service">
+            <sources folder="src/main/java" basePackage="com.asiainfo.dd2.bean">
+                <file subPackage="web"  template="${className}Controller.java"></file>
+            </sources>
+          </module>
+
+    </project>
+
+    <generates>
+        <!-- 配置需要生成代码的类，tableName：表名; className：类名 -->
+        <table tableName="icy_menu" className="Menu" module=""></table>
+
+    </generates>
+
+
+</configuration>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <properties resource="jdbc.properties"/>
+	<properties>
+        <!-- 数据库连接配置 -->
+        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+
+		<!-- 工程和模板配置 -->
+		<property name="override" value="false"></property>
+		<property name="projectName" value="icy-web"></property>
+		<property name="projectDir" value="e://myproject"></property>
+        <property name="templateDir" value="src/main/resources/template/"></property>
+		<property name="outDir" value="in"></property>
+        <property name="outMode" value="in"></property>
+    </properties>
+
+	<templates>
+		<template name="controller" package="com.sxt.controller" file="${className}Controller.java"   />
+		<template name="service" package="com.sxt.service" file="${className}Service.java"     />
+		<template name="serviceImpl" package="com.sxt.service.impl" file="${className}ServiceImpl.java"     />
+		<template name="dao" package="com.sxt.dao" file="${className}dao.java"     />
+		<template name="mapper" package="com.sxt.mapper" file="${className}mapper.java"     />
+		<template name="entity" package="com.sxt.entity" file="${className}.java"     />
+	</templates>
+
+    <modules>
+		<!-- 如果isSub为false，或者moduleName为空，表示不是子模块WW -->
+		<module isSub="false"
+			moduleName="myIn"
+			sourceDir="src/main/java"
+			resourceDir="src/main/resource"
+			templates="controller,service,serviceImpl,dao,mapper,entity"
+		/>
+	</modules>
+
+    <tables>
+			<!-- 如果不配置moduleName,默认使用modules的第一个module配置 -->
+			<!-- 配置需要生成代码的类，tableName：表名; className：类名 -->
+            <table moduleName="myIn,myIn2" tableName="icy_user" className="User" ></table>
+            <table tableName="icy_role" className="Role" ></table>
+            <table tableName="icy_funcright" className="Funcright" ></table>
+            <table tableName="icy_menu" className="Menu" ></table>-->
+            <table tableName="icy_user" className="User" ></table>
+            <table tableName="icy_depart" className="Depart" ></table>
+
+    </tables>
+
+
+
+  </configuration>
