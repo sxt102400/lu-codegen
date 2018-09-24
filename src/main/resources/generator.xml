@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <properties resource="jdbc.properties"/>
+
+	<!--
+		prop.{name}
+	-->
+	<properties>
+
+		<!-- 工程和模板配置 -->
+		<property name="projectName" value="icy-web"></property>
+		<property name="projectDir" value="e://myproject"></property>
+		<!--  <property name="projectDir" value="../myproject"></property> -->
+        <property name="templateDir" value="template/my"></property>
+		<property name="override" value="true"></property>
+		<property name="outDir" value="in"></property>
+        <property name="outMode" value="in"></property>
+    </properties>
+
+	<jdbcConnection driverClassName="${jdbc.driverClassName}"
+					url="${jdbc.url}"
+					username="${jdbc.username}"
+					password="${jdbc.password}">
+	</jdbcConnection>
+	<!--
+		tpl.{name}.packageName
+		tpl.file
+	-->
+	<templates >
+		<template name="controller" packageName="com.sxt.controller" fileName="${className}Controller.java"   />
+		<template name="service" packageName="com.sxt.service" fileName="${className}Service.java"     />
+		<template name="serviceImpl" packageName="com.sxt.service.impl" fileName="${className}ServiceImpl.java"     />
+		<template name="dao" packageName="com.sxt.dao" fileName="${className}Dao.java"     />
+		<template name="mapper" packageName="com.sxt.mapper" fileName="${className}mapper.java"     />
+		<template name="entity" packageName="com.sxt.entity" fileName="${className}.java"     />
+		<template name="xmlMapper" packageName="com.sxt.mapper" fileName="${className}_Mapper.xml" type="xml"  />
+	</templates>
+
+	<!--
+		mod.{name}.isSub		mod.{name}.source  mod.{name}.resource
+	-->
+    <modules>
+		<!-- 如果isSub=false表示不是子模块 -->
+		<module name="myIn"
+			isSub="false"
+			source ="src/main/java"
+			resource ="src/main/resource"
+			templates="controller,service,serviceImpl,dao,mapper,entity,xmlMapper"
+		/>
+	</modules>
+
+
+	<!--
+		introspectedTable.tableName
+		introspectedTable.className
+		introspectedTable.moduleName
+		introspectedTable.columns
+	-->
+    <tables>
+			<!-- 如果不配置moduleName,默认使用modules的第一个module配置 -->
+			<!-- 配置需要生成代码的类，tableName：表名; className：类名 -->
+            <table  tableName="t_sys_user" className="SysUser" ></table>
+            <table tableName="icy_role" className="Role" ></table>
+            <table tableName="icy_funcright" className="Funcright" ></table>
+            <table tableName="icy_menu" className="Menu" ></table>-->
+            <table tableName="icy_user" className="User" ></table>
+            <table tableName="icy_depart" className="Depart" ></table>
+
+    </tables>
+
+
+
+  </configuration>
