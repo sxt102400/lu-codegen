@@ -8,7 +8,7 @@
 <#-- entity函数定义=================== -->
 <#-- Filed列名 -->
 <#macro generateColumnNames>
-    <#list introspectedTable.columns as column>
+    <#list table.columns as column>
 
     public static final String COLUMN_${column.columnName?upper_case} = "${column.columnName}";
 
@@ -18,7 +18,7 @@
 
 <#-- Filed字段 -->
 <#macro generateColumns>
-<#list introspectedTable.columns as column>
+<#list table.columns as column>
     /**
     * Field ${column.fieldName} : ${column.remark!}
     */
@@ -33,7 +33,7 @@
 </#macro>
 <#-- getter和setter方法 -->
 <#macro generateJavaSetterGetter>
-<#list introspectedTable.columns as column>
+<#list table.columns as column>
     public void set${column.fieldName?cap_first}( ${column.javaType} ${column.fieldName} ) {
         this.${column.fieldName} = ${column.fieldName};
     }
@@ -46,14 +46,14 @@
 <#-- service函数定义=================== -->
 </#macro>
 <#-- 主键类型 -->
-<#macro pkType><#list introspectedTable.pkColumns as column>${column.javaType}<#if column_has_next>,</#if></#list></#macro>
+<#macro pkType><#list table.pkColumns as column>${column.javaType}<#if column_has_next>,</#if></#list></#macro>
 <#-- 主键字段 -->
-<#macro pkField><#list introspectedTable.pkColumns as column>${column.fieldName}<#if column_has_next>,</#if></#list></#macro>
+<#macro pkField><#list table.pkColumns as column>${column.fieldName}<#if column_has_next>,</#if></#list></#macro>
 <#-- 主键类型和字段 -->
-<#macro pkTypeAndField><#list introspectedTable.pkColumns as column>${column.javaType} ${column.fieldName}<#if column_has_next>,</#if></#list> </#macro>
+<#macro pkTypeAndField><#list table.pkColumns as column>${column.javaType} ${column.fieldName}<#if column_has_next>,</#if></#list> </#macro>
 <#-- 设置example方法 -->
 <#macro generateExample>
-<#list introspectedTable.columns as column>
+<#list table.columns as column>
         if (condition.get${column.fieldName?cap_first}() != null) {
             criteria.andEqualTo( ${className}.COLUMN_${column.columnName?upper_case},condition.get${column.fieldName?cap_first}() );
         }
@@ -62,28 +62,28 @@
 <#-- XML函数=================== -->
 <#-- resultMapList -->
 <#macro resultMapList>
-<#list introspectedTable.pkColumns as column>
+<#list table.pkColumns as column>
         <id column="${column.columnName}" property="${column.fieldName}" jdbcType="${column.sqlTypeName}" />
 </#list>
-<#list introspectedTable.notPkColumns as column>
+<#list table.notPkColumns as column>
         <result column="${column.columnName}" property="${column.fieldName}" jdbcType="${column.sqlTypeName}" />
 </#list>
 </#macro>
 <#-- columnList -->
 <#macro columnList>
-            <#list introspectedTable.columns as column> ${column.columnName} <#if column_has_next>,</#if> </#list>
+            <#list table.columns as column> ${column.columnName} <#if column_has_next>,</#if> </#list>
 </#macro>
 <#-- columnParamList -->
 <#macro columnParamList>
-            <#list introspectedTable.columns as column> ${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if> </#list>
+            <#list table.columns as column> ${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if> </#list>
 </#macro>
 <#-- pkCondition -->
 <#macro pkCondition>
-<#list introspectedTable.pkColumns as column> ${column.columnName} = ${"#"}{${column.fieldName} ,jdbcType=${column.sqlTypeName}} <#if column_has_next> and </#if> </#list>
+<#list table.pkColumns as column> ${column.columnName} = ${"#"}{${column.fieldName} ,jdbcType=${column.sqlTypeName}} <#if column_has_next> and </#if> </#list>
 </#macro>
 <#-- testColumnList -->
 <#macro testColumnList>
-<#list introspectedTable.columns as column>
+<#list table.columns as column>
         <if test="${column.fieldName} != null">
             ${column.columnName},
         </if>
@@ -91,7 +91,7 @@
 </#macro>
 <#-- testColumnParamList -->
 <#macro testColumnParameList>
-<#list introspectedTable.columns as column>
+<#list table.columns as column>
         <if test="${column.fieldName} != null">
             ${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}},
         </if>
@@ -99,19 +99,19 @@
 </#macro>
 <#-- updateColumnList -->
 <#macro updateColumnList>
-<#list introspectedTable.columns as column>
+<#list table.columns as column>
             ${column.columnName} = ${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if>
 </#list>
 </#macro>
 <#-- updateColumnListWithMap -->
 <#macro updateColumnListWithMap>
-<#list introspectedTable.columns as column>
+<#list table.columns as column>
             ${column.columnName} = ${"#"}{record.${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if>
 </#list>
 </#macro>
 <#-- testUpdateColumnList -->
 <#macro testUpdateColumnListWithMap>
-<#list introspectedTable.columns as column>
+<#list table.columns as column>
         <if test="record.${column.fieldName} != null">
             ${column.columnName} = ${"#"}{record.${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if>
         </if>
@@ -119,7 +119,7 @@
 </#macro>
 <#-- updateColumnSelectiveList -->
 <#macro testUpdateColumnList>
-<#list introspectedTable.notPkColumns as column>
+<#list table.notPkColumns as column>
         <if test="${column.fieldName} != null">
             ${column.columnName} =${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if>
         </if>
