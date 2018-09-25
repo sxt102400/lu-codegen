@@ -1,6 +1,6 @@
 package ${tpl@controller.packageName};
 
-<#include "func.ftl">
+<#include "global.ftl">
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

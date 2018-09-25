@@ -1,5 +1,7 @@
-package com.rats.lu.generator.api;
+package com.rats.lu.generator;
 
+import com.rats.lu.generator.api.ConfigurationParser;
+import com.rats.lu.generator.api.LuGenarator;
 import com.rats.lu.generator.config.Configuration;
 import com.rats.lu.generator.exception.XMLParserException;
 

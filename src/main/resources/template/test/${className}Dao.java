@@ -1,6 +1,6 @@
 package ${tpl@dao.packageName};
 
-<#include "func.ftl">
+<#include "global.ftl">
 
 import java.util.List;
 import javax.annotation.Resource;
@@ -22,8 +22,8 @@ import ${tpl@mapper.packageName}.${className}Mapper;
  * @author : ${author!}
  * @since :${now!}
  */
-@Dao
-public abstract  ${className}Respontiry extends BaseRespontiry<${className}>{
+@Repository
+public class ${className}Dao{
     /**
      * Field LOGGER : 日志操作类
      */
@@ -32,14 +32,8 @@ public abstract  ${className}Respontiry extends BaseRespontiry<${className}>{
     /**
      * Field ${className?uncap_first}Mapper : ${className}表的Mybatis Mapper操作映射类
      */
-
-    private BaseMapper<T> ${className?uncap_first}Mapper;
-
-
-   BaseRespontiry() {
-
-        Mapper =  MapperFactoryBean.getBean(${className?uncap_first});
-    }
+    @Resource
+    private ${className}Mapper ${className?uncap_first}Mapper;
 
     /**
      * ${className}Dao.countByExample

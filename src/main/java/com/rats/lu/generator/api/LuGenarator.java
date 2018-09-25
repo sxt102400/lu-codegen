@@ -6,7 +6,7 @@ import com.rats.lu.generator.config.TableConfiguration;
 import com.rats.lu.generator.table.DatabaseIntrospector;
 import com.rats.lu.generator.table.IntrospectedTable;
 import com.rats.lu.generator.table.JdbcConnectionFactory;
-import com.rats.lu.generator.xml.MsgFmt;
+import com.rats.lu.generator.utils.MsgFmt;
 
 import java.io.IOException;
 import java.sql.Connection;

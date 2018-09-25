@@ -1,4 +1,4 @@
-package com.rats.lu.generator.xml;
+package com.rats.lu.generator.utils;
 
 import java.text.MessageFormat;
 

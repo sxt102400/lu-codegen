@@ -1,6 +1,6 @@
 package ${tpl@mapper.packageName};
 
-<#include "func.ftl">
+<#include "global.ftl">
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;

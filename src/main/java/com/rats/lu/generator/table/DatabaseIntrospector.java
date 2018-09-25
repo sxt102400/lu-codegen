@@ -3,7 +3,7 @@ package com.rats.lu.generator.table;
 import com.rats.lu.generator.config.TableConfiguration;
 import com.rats.lu.generator.utils.DbUtils;
 import com.rats.lu.generator.utils.StringTools;
-import com.rats.lu.generator.xml.MsgFmt;
+import com.rats.lu.generator.utils.MsgFmt;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;

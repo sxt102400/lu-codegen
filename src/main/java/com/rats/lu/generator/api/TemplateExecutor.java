@@ -9,7 +9,7 @@ import com.rats.lu.generator.table.IntrospectedTable;
 import com.rats.lu.generator.template.TemplateRender;
 import com.rats.lu.generator.template.TemplateRenderFactory;
 import com.rats.lu.generator.utils.PathUtils;
-import com.rats.lu.generator.xml.MsgFmt;
+import com.rats.lu.generator.utils.MsgFmt;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;

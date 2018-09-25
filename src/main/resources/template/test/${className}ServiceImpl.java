@@ -1,6 +1,6 @@
 package ${tpl@serviceImpl.packageName};
 
-<#include "func.ftl">
+<#include "global.ftl">
 
 import java.util.List;
 import javax.annotation.Resource;
@@ -47,9 +47,7 @@ public class ${className}ServiceImpl implements ${className}Service {
      */
     @Override
     public int count(${className} condition ) {
-        Example example = new Example();
-        Example.Criteria criteria = example.createCriteria();
-<@generateExample/>
+        Example example = createExample();
         return this.${className?uncap_first}Mapper.countByExample(example);
     }
 
@@ -62,9 +60,7 @@ public class ${className}ServiceImpl implements ${className}Service {
      */
     @Override
     public int delete(${className} condition ) {
-        Example example = new Example();
-        Example.Criteria criteria = example.createCriteria();
-<@generateExample/>
+        Example example = createExample();
         return this.${className?uncap_first}Mapper.deleteByExample(example);
     }
 
@@ -114,9 +110,7 @@ public class ${className}ServiceImpl implements ${className}Service {
      */
     @Override
     public List<${className}> select(${className} condition ) {
-        Example example = new Example();
-        Example.Criteria criteria = example.createCriteria();
-<@generateExample/>
+        Example example = createExample();
         return this.${className?uncap_first}Mapper.selectByExample(example);
     }
 
@@ -130,9 +124,7 @@ public class ${className}ServiceImpl implements ${className}Service {
      */
     @Override
     public Page<${className}> select(${className} condition, Page page) {
-        Example example = new Example();
-        Example.Criteria criteria = example.createCriteria();
-<@generateExample/>
+        Example example = createExample();
         page.setTotalCount(${className?uncap_first}Mapper.countByExample(example));
         RowBounds rowBounds = new RowBounds(page.getFirstResult(), page.getMaxResults());
         page.setList(${className?uncap_first}Mapper.selectByExample(example, rowBounds));
@@ -165,9 +157,7 @@ public class ${className}ServiceImpl implements ${className}Service {
      */
     @Override
     public int update(${className} update, ${className}  condition ) {
-        Example example = new Example();
-        Example.Criteria criteria = example.createCriteria();
-<@generateExample/>
+        Example example = createExample();
         return this.${className?uncap_first}Mapper.updateByExample(update, example);
     }
 
@@ -181,9 +171,7 @@ public class ${className}ServiceImpl implements ${className}Service {
      */
     @Override
     public int updateSelective(${className} update, ${className}  condition ) {
-        Example example = new Example();
-        Example.Criteria criteria = example.createCriteria();
-<@generateExample/>
+        Example example = createExample();
         return this.${className?uncap_first}Mapper.updateByExampleSelective(update, example);
     }
 
@@ -213,5 +201,18 @@ public class ${className}ServiceImpl implements ${className}Service {
     }
 
 </#if>
+
+    public Example createExample(){
+        Example example = new Example();
+        Example.Criteria criteria = example.createCriteria();
+<#list table.columns as column>
+        if (condition.get${column.fieldName?cap_first}() != null) {
+            criteria.andEqualTo( "{column.columnName}",condition.get${column.fieldName?cap_first}() );
+        }
+</#list>
+        return example;
+    }
 }
+
+
 

@@ -1,6 +1,6 @@
 package ${tpl@service.packageName};
 
-<#include "func.ftl">
+<#include "global.ftl">
 import java.util.List;
 
 import ${tpl@entity.packageName}.${className};
@@ -47,3 +47,4 @@ public interface ${className}Service {
 
 </#if>
 }
+

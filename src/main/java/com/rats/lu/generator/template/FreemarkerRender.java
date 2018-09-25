@@ -1,12 +1,10 @@
 package com.rats.lu.generator.template;
 
 
-import com.rats.lu.generator.xml.MsgFmt;
-import freemarker.cache.TemplateLoader;
+import com.rats.lu.generator.utils.MsgFmt;
 import freemarker.template.Configuration;
 
 import java.io.*;
-import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 
@@ -41,6 +39,8 @@ public class FreemarkerRender implements TemplateRender {
                 System.out.println(MsgFmt.getString("\t\t[skip！] 类文件已经存在:{0}" ,outFile.getCanonicalPath()));
                 return;
             }
+            freemarker.template.Template template = cfg.getTemplate(templateFileName);
+
             File dir = outFile.getParentFile();
             if (!dir.exists()) {
                 dir.mkdirs();
@@ -50,7 +50,6 @@ public class FreemarkerRender implements TemplateRender {
             } else {
                 overrideInfo = "was overwritten";
             }
-            freemarker.template.Template template = cfg.getTemplate(templateFileName);
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), "UTF-8"));
             template.process(context, writer);
             System.out.println(MsgFmt.getString("[file] 生成文件成功: {0}  {1}" ,outFile.getCanonicalPath(),overrideInfo));
