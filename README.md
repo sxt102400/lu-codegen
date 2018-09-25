@@ -1,8 +1,8 @@
 
 
-## lu-generator
+# lu-generator
 
-### 目的
+## 目的
 
 其实目前mybatis已经有官方的生成器 mybatis-generator，再造一个轮子的目的是为了方便修改，可拓展定制功能。
 
@@ -114,7 +114,7 @@
 
 
 
-### 配置文件说明
+## 配置文件说明
 
 **properties**
 
@@ -206,7 +206,7 @@
 
 
 
-### Context
+## Context
 
 Context是指在模板中可以直接使用的变量
 
@@ -307,7 +307,7 @@ Column属性：
 
 
 
-### 下一版本计划
+## 下一版本计划
 
 **lu-generator代码生成器**
 
