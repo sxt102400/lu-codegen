@@ -1,70 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//rats.org//Lu Generator Configuration 1.0//EN"
+        "com/rats/lu/generator/config/xml/lu-generator-config_1_0.dtd">
 <configuration>
 
     <properties resource="jdbc.properties"/>
 
-	<properties>
+    <properties>
 
-		<!-- 工程和模板配置 -->
-		<property name="projectName" value="myproject"></property>
-		<property name="projectDir" value="d://myproject"></property>
+        <!-- 工程和模板配置 -->
+        <property name="projectName" value="myproject"></property>
+        <property name="projectDir" value="d://myproject"></property>
         <property name="templateDir" value="template/test"></property>
-		<property name="override" value="true"></property>
+        <property name="override" value="true"></property>
     </properties>
 
-	<!-- jdbc配置 -->
-	<jdbcConnection driverClassName="${jdbc.driverClassName}"
-					url="${jdbc.url}"
-					username="${jdbc.username}"
-					password="${jdbc.password}">
-	</jdbcConnection>
-	
-	
-	<!-- 模板文件配置 -->
-	<templates >
-		<template name="controller" packageName="com.sxt.controller" fileName="${className}Controller.java"   />
-		<template name="service" packageName="com.sxt.service" fileName="${className}Service.java"     />
-		<template name="serviceImpl" packageName="com.sxt.service.impl" fileName="${className}ServiceImpl.java"     />
-		<template name="dao" packageName="com.sxt.dao" fileName="${className}Dao.java"     />
-		<template name="mapper" packageName="com.sxt.mapper" fileName="${className}mapper.java"     />
-		<template name="entity" packageName="com.sxt.entity" fileName="${className}.java"     />
-		<template name="xmlMapper" packageName="com.sxt.mapper" fileName="${className}_Mapper.xml" type="xml"  />
-	</templates>
-	
-	<!-- 模块配置 -->
+    <!-- jdbc配置 -->
+    <jdbcConnection driverClassName="${jdbc.driverClassName}"
+                    url="${jdbc.url}"
+                    username="${jdbc.username}"
+                    password="${jdbc.password}">
+    </jdbcConnection>
+
+
+    <!-- 模板文件配置 -->
+    <templates>
+        <template name="controller" packageName="com.sxt.controller" fileName="${className}Controller.java"/>
+        <template name="service" packageName="com.sxt.service" fileName="${className}Service.java"/>
+        <template name="serviceImpl" packageName="com.sxt.service.impl" fileName="${className}ServiceImpl.java"/>
+        <template name="dao" packageName="com.sxt.dao" fileName="${className}Dao.java"/>
+        <template name="mapper" packageName="com.sxt.mapper" fileName="${className}mapper.java"/>
+        <template name="entity" packageName="com.sxt.entity" fileName="${className}.java"/>
+        <template name="xmlMapper" packageName="com.sxt.mapper" fileName="${className}_Mapper.xml" type="xml"/>
+    </templates>
+
+    <!-- 模块配置 -->
     <modules>
-		<module name="www-user-api"
-			isSub="false"
-			sources ="src/main/java"
-			resources ="src/main/resources"
-			templates="entity,mapper,dao,service,serviceImpl,controller,xmlMapper"
-		/>
-	</modules>
-	
-	
-	<!-- 配置需要生成代码的表，tableName：表名; className：类名 -->
+        <module name="www-user-api"
+                isSub="false"
+                sources="src/main/java"
+                resources="src/main/resources"
+                templates="entity,mapper,dao,service,serviceImpl,controller,xmlMapper"
+        />
+    </modules>
+
+
+    <!-- 配置需要生成代码的表，tableName：表名; className：类名 -->
     <tables>
-		<table  tableName="t_sys_user" className="SysUser" >
-			<columnOverride column="id" field="myId"/> cx
-			<columnOverride column="type" field="myType"/>
-			<columnOverride column="username" field="MyTheuserName"/>
-			<columnOverride column="password" field="myPassword" ignore="true"/>
-			<columnOverride column="age" field="myAge"/>
-		</table>
-		<table tableName="icy_role" className="Role" ></table>
-		<table tableName="icy_funcright" className="Funcright" ></table>
-		<table tableName="icy_menu" className="Menu" ></table>
-		<table tableName="icy_user" className="User" ></table>
-		<table tableName="test" className="Test" >
-			<columnOverride column="testName"
-				field="username"
-				javaType="Long"
-				jdbcType="VARCHAR"
-				transient="true"
-				ignore="true"
-				override="true"
-			/>
-		</table>
+        <table tableName="t_sys_user" className="SysUser">
+            <columnOverride column="id" field="myId"/>
+            <columnOverride column="type" field="myType"/>
+            <columnOverride column="username" field="MyTheuserName"/>
+            <columnOverride column="password" field="myPassword" ignore="true"/>
+            <columnOverride column="age" field="myAge"/>
+        </table>
+        <table tableName="icy_role" className="Role"></table>
+        <table tableName="icy_funcright" className="Funcright"></table>
+        <table tableName="icy_menu" className="Menu"></table>
+        <table tableName="icy_user" className="User"></table>
+        <table tableName="test" className="Test">
+            <columnOverride column="testName"
+                            field="username"
+                            javaType="Long"
+                            jdbcType="VARCHAR"
+                            ignore="true"
+            />
+        </table>
     </tables>
 
-  </configuration>
+</configuration>

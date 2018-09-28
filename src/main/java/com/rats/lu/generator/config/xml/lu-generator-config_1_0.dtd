@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+- Licensed Text
+-->
+<!ELEMENT configuration (properties*, jdbcConnection, templates, modules, tables)>
+
+
+<!ELEMENT properties (property*)>
+<!ATTLIST properties
+        resource CDATA #IMPLIED
+        url CDATA #IMPLIED>
+
+<!ELEMENT jdbcConnection (property*)>
+<!ATTLIST jdbcConnection
+        driverClassName CDATA #REQUIRED
+        url CDATA #REQUIRED
+        username CDATA #IMPLIED
+        password CDATA #IMPLIED>
+
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+        name CDATA #REQUIRED
+        value CDATA #REQUIRED>
+
+
+<!ELEMENT templates (template*)>
+<!ELEMENT template EMPTY>
+<!ATTLIST template
+        name CDATA #REQUIRED
+        fileName CDATA #REQUIRED
+        packageName CDATA #IMPLIED
+        type CDATA #IMPLIED >
+
+<!ELEMENT modules (module*)>
+<!ELEMENT module EMPTY>
+<!ATTLIST module
+        name CDATA #REQUIRED
+        sources CDATA #IMPLIED
+        resources CDATA #IMPLIED
+        templates CDATA #IMPLIED
+        isSub CDATA #IMPLIED>
+
+
+<!ELEMENT tables (table*)>
+<!ELEMENT table (columnOverride*)>
+<!ATTLIST table
+        tableName CDATA #REQUIRED
+        className CDATA #IMPLIED
+        subPackageName CDATA #IMPLIED
+        catalog CDATA #IMPLIED
+        schema CDATA #IMPLIED >
+
+<!ELEMENT columnOverride EMPTY>
+<!ATTLIST columnOverride
+        column CDATA #REQUIRED
+        field CDATA #IMPLIED
+        javaType CDATA #IMPLIED
+        jdbcType CDATA #IMPLIED
+        ignore CDATA #IMPLIED >
+

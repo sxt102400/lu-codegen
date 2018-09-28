@@ -65,8 +65,8 @@
   	<!-- 模块配置 -->
     <modules>
 		<module name="myIn"
-			source ="src/main/java"
-			resource ="src/main/resource"
+			sources ="src/main/java"
+			resources ="src/main/resource"
 			templates="entity,mapper,xmlMapper"
 		/>
 	</modules>
