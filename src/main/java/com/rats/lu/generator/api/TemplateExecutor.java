@@ -1,13 +1,11 @@
 package com.rats.lu.generator.api;
 
 
-import com.rats.lu.generator.config.Configuration;
-import com.rats.lu.generator.config.ConstantConfig;
-import com.rats.lu.generator.config.ModuleConfiguration;
-import com.rats.lu.generator.config.TemplateConfiguration;
+import com.rats.lu.generator.config.*;
 import com.rats.lu.generator.table.IntrospectedTable;
 import com.rats.lu.generator.template.TemplateRender;
 import com.rats.lu.generator.template.TemplateRenderFactory;
+import com.rats.lu.generator.utils.ObjectFactory;
 import com.rats.lu.generator.utils.PathUtils;
 import com.rats.lu.generator.utils.MsgFmt;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +17,14 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class TemplateExecutor {
 
     private final String USER_DIR = System.getProperty("user.dir");
@@ -123,6 +129,7 @@ public class TemplateExecutor {
 
         String packageName = template.getPackageName();
         if (StringUtils.isNotBlank(packageName)) {
+            packageName = PathUtils.resolveFileName(packageName, context);
             packageName = PathUtils.getPathOfPackage(packageName);
             pathList.add(packageName);
         }
@@ -151,26 +158,31 @@ public class TemplateExecutor {
 
     private Map initContext() {
         Map<String, Object> context = new HashMap<String, Object>();
+
+
         context.put("table", introspectedTable);
         context.put("tableName", introspectedTable.getTableName());
         context.put("className", introspectedTable.getClassName());
+        context.put("subPackageName", introspectedTable.getSubPackageName());
+        context.put("catalog", introspectedTable.getCatalog());
+        context.put("schema", introspectedTable.getSchema());
+
         context.put("entityName", StringUtils.uncapitalize(introspectedTable.getClassName()));
         String author = configuration.getProperties().getProperty("author");
         context.put("author", StringUtils.defaultIfBlank(author, System.getProperty("user.name")));
 
         Properties properties = configuration.getProperties();
-
         for (Object keyObj : properties.keySet()) {
             String key = (String) keyObj;
             context.put("prop@" + key.trim(), properties.getProperty(key));
         }
         List<ModuleConfiguration> moduleConfiguration = configuration.getModuleConfigurations();
         for (ModuleConfiguration module : moduleConfiguration) {
-            context.put("mod@" + module.getName().trim(), module);
+            context.put("mod@" + module.getName().trim(), ObjectFactory.resolveParams(module ,context));
         }
         List<TemplateConfiguration> templateConfigurations = configuration.getTemplateConfigurations();
         for (TemplateConfiguration template : templateConfigurations) {
-            context.put("tpl@" + template.getName().trim(), template);
+            context.put("tpl@" + template.getName().trim(), ObjectFactory.resolveParams(template ,context));
         }
         return context;
     }

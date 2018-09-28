@@ -9,7 +9,7 @@
 		<property name="projectName" value="myproject"></property>
 		<property name="projectDir" value="d://myproject"></property>
         <property name="templateDir" value="template/test"></property>
-		<property name="override" value="false"></property>
+		<property name="override" value="true"></property>
     </properties>
 
 	<!-- jdbc配置 -->
@@ -35,21 +35,36 @@
     <modules>
 		<module name="www-user-api"
 			isSub="false"
-			source ="src/main/java"
-			resource ="src/main/resource"
-			templates="controller,service,serviceImpl,dao,mapper,entity,xmlMapper"
+			sources ="src/main/java"
+			resources ="src/main/resources"
+			templates="entity,mapper,dao,service,serviceImpl,controller,xmlMapper"
 		/>
 	</modules>
 	
 	
 	<!-- 配置需要生成代码的表，tableName：表名; className：类名 -->
     <tables>
-		<table  tableName="t_sys_user" className="SysUser" ></table>
+		<table  tableName="t_sys_user" className="SysUser" >
+			<columnOverride column="id" field="myId"/> cx
+			<columnOverride column="type" field="myType"/>
+			<columnOverride column="username" field="MyTheuserName"/>
+			<columnOverride column="password" field="myPassword" ignore="true"/>
+			<columnOverride column="age" field="myAge"/>
+		</table>
 		<table tableName="icy_role" className="Role" ></table>
 		<table tableName="icy_funcright" className="Funcright" ></table>
 		<table tableName="icy_menu" className="Menu" ></table>
 		<table tableName="icy_user" className="User" ></table>
-		<table tableName="icy_depart" className="Depart" ></table>
+		<table tableName="test" className="Test" >
+			<columnOverride column="testName"
+				field="username"
+				javaType="Long"
+				jdbcType="VARCHAR"
+				transient="true"
+				ignore="true"
+				override="true"
+			/>
+		</table>
     </tables>
 
   </configuration>

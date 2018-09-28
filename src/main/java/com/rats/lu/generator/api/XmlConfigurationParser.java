@@ -2,6 +2,7 @@ package com.rats.lu.generator.api;
 
 import com.rats.lu.generator.config.*;
 import com.rats.lu.generator.exception.XMLParserException;
+import com.rats.lu.generator.table.ColumnOverride;
 import com.rats.lu.generator.utils.ObjectFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.*;
@@ -11,6 +12,14 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class XmlConfigurationParser {
 
     Properties prop;
@@ -103,14 +112,14 @@ public class XmlConfigurationParser {
                     ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
                     Properties attributes = this.parseAttributes(childNode);
                     String name = attributes.getProperty("name");
-                    String source = StringUtils.defaultIfBlank(attributes.getProperty("source"), ConstantConfig.DEFUAULT_SOURCE);
-                    String resource = StringUtils.defaultIfBlank(attributes.getProperty("resource"), ConstantConfig.DEFUAULT_RESOURCE);
+                    String sources = StringUtils.defaultIfBlank(attributes.getProperty("sources"), ConstantConfig.DEFUAULT_SOURCE);
+                    String resources = StringUtils.defaultIfBlank(attributes.getProperty("resources"), ConstantConfig.DEFUAULT_RESOURCE);
                     String templates = attributes.getProperty("templates");
                     String isSub = attributes.getProperty("isSub");
 
                     moduleConfiguration.setName(name);
-                    moduleConfiguration.setSource(source);
-                    moduleConfiguration.setResource(resource);
+                    moduleConfiguration.setSources(sources);
+                    moduleConfiguration.setResources(resources);
                     moduleConfiguration.setTemplates(templates);
                     configuration.addModuleConfiguration(moduleConfiguration);
                 }
@@ -128,17 +137,56 @@ public class XmlConfigurationParser {
                     Properties attributes = this.parseAttributes(childNode);
                     String tableName = attributes.getProperty("tableName");
                     String className = attributes.getProperty("className");
+                    String subPackageName = attributes.getProperty("subPackageName");
                     String catalog = attributes.getProperty("catalog");
                     String schema = attributes.getProperty("schema");
 
                     tableConfiguration.setTableName(tableName);
                     tableConfiguration.setClassName(className);
+                    tableConfiguration.setSubPackageName(subPackageName);
                     tableConfiguration.setCatalog(catalog);
                     tableConfiguration.setSchema(schema);
+                    parseTable(tableConfiguration, childNode);
                     configuration.addTableConfiguration(tableConfiguration);
+
                 }
             }
         }
+    }
+    protected void parseTable(TableConfiguration tableConfiguration, Node node) throws XMLParserException {
+        NodeList nodeList = node.getChildNodes();
+        for(int i = 0; i < nodeList.getLength(); ++i) {
+            Node childNode = nodeList.item(i);
+            if (childNode.getNodeType() == 1) {
+               if ("columnOverride".equals(childNode.getNodeName())) {
+                    this.parseColumnOverride(tableConfiguration, childNode);
+                }
+            }
+        }
+
+    }
+
+    protected void parseColumnOverride(TableConfiguration tableConfiguration, Node node) throws XMLParserException {
+        Properties attributes = this.parseAttributes(node);
+        String column = attributes.getProperty("column");
+        String field = attributes.getProperty("field");
+        String javaType = attributes.getProperty("javaType");
+        String jdbcType = attributes.getProperty("jdbcType");
+        String ignore = attributes.getProperty("ignore");
+        String serialize = attributes.getProperty("serialize");
+
+        ColumnOverride columnOverride = new ColumnOverride();
+        columnOverride.setColumnName(column);
+        columnOverride.setFieldName(field);
+        columnOverride.setJavaType(javaType);
+        columnOverride.setJdbcType(jdbcType);
+        if(StringUtils.isNotBlank( ignore)) {
+            columnOverride.setIgnore(Boolean.valueOf(ignore));
+        }
+        if(StringUtils.isNotBlank( serialize)) {
+            columnOverride.setIgnore(Boolean.valueOf(serialize));
+        }
+        tableConfiguration.addColumnOverride(columnOverride);
     }
 
     /**

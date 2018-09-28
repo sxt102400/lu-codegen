@@ -13,6 +13,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class DatabaseIntrospector {
 
     private Connection connection;
@@ -33,16 +41,20 @@ public class DatabaseIntrospector {
         String className = tableConfiguration.getClassName();
         String catalog = tableConfiguration.getCatalog();
         String schema = tableConfiguration.getSchema();
+        String subPackageName = tableConfiguration.getSubPackageName();
 
-        IntrospectedTable table = null;
+
         assert StringUtils.isNotBlank(tableName) : "tableName can't null";
         assert databaseMetaData != null : "dbMetaData can't null";
+
+        IntrospectedTable table    = new IntrospectedTable();
+        table.setClassName(StringUtils.defaultIfBlank(className, StringTools.toCamel(tableName)));
+        table.setSubPackageName(subPackageName);
+
         System.out.println(MsgFmt.getString("[start] 开始解析table信息：{0}", tableName));
         try (ResultSet rs = databaseMetaData.getTables(catalog, schema, tableName, null)) {
             if (rs.next()) {
-                table = new IntrospectedTable();
                 table.setTableName(tableName);
-                table.setClassName(StringUtils.defaultIfBlank(className, StringTools.toCamel(tableName)));
                 String actTableName = rs.getString("TABLE_NAME");
                 String actTableType = rs.getString("TABLE_TYPE");
                 String actSchemaName = StringUtils.defaultIfBlank(rs.getString("TABLE_SCHEM"), "");
@@ -55,14 +67,42 @@ public class DatabaseIntrospector {
             ex.printStackTrace();
         }
         if (table != null) {
-            initTableColumns(databaseMetaData, table);
+            this.introspectColumns(databaseMetaData, table);
         }
         return table;
     }
 
+    public List<Column> applyColumnOverrides(List<Column> introspectedColumns) {
+        List<ColumnOverride> columnOverrides = new ArrayList<>();
+        List<Column> columnList =  new ArrayList<>();
+        for(Column introspectedColumn: introspectedColumns){
+            ColumnOverride columnOverride = tableConfiguration.getColumnOverride(introspectedColumn.getColumnName());
+            if (columnOverride != null) {
+                if (StringUtils.isNotBlank(columnOverride.getFieldName())) {
+                    introspectedColumn.setFieldName(columnOverride.getFieldName());
+                }
+                if (StringUtils.isNotBlank(columnOverride.getJavaType())) {
+                    introspectedColumn.setJavaTypeName(columnOverride.getJavaType());
+                }
+                if (StringUtils.isNotBlank(columnOverride.getJdbcType())) {
+                    introspectedColumn.setJdbcTypeName(columnOverride.getJdbcType());
+                }
+                if (columnOverride.isSerialize()) {
+                   //TODO
+                }
+                if (!columnOverride.isIgnore()) {
+                    columnList.add(introspectedColumn);
+                }
+            }else{
+                columnList.add(introspectedColumn);
+            }
+        }
+        return columnList;
+    }
 
-    public void initTableColumns(DatabaseMetaData databaseMetaData, IntrospectedTable introspectedTable) {
+    public void introspectColumns(DatabaseMetaData databaseMetaData, IntrospectedTable introspectedTable) {
         List<Column> columns = geColumns(databaseMetaData, introspectedTable);
+        columns = this.applyColumnOverrides(columns);
         List<Column> pkColumns = new ArrayList<Column>();
         List<Column> notPkColumns = new ArrayList<Column>();
         for (Column cl : columns) {
@@ -95,36 +135,44 @@ public class DatabaseIntrospector {
         List<String> indexInfos = this.getIndexInfoAll(databaseMetaData, introspectedTable);
         List<String> indexUniques = this.getIndexInfoUnique(databaseMetaData, introspectedTable);
 
-        try (ResultSet columnRs = databaseMetaData.getColumns(introspectedTable.getCatalog(), introspectedTable.getSchema(), introspectedTable.getTableName(), null)) {
+        try (ResultSet rs = databaseMetaData.getColumns(introspectedTable.getCatalog(), introspectedTable.getSchema(), introspectedTable.getTableName(), null)) {
             System.out.println(MsgFmt.getString("[table] -> catalog:{0}\tschema:{1}\ttable:{2}", introspectedTable.getCatalog(), introspectedTable.getSchema(), introspectedTable.getTableName()));
-            while (columnRs.next()) {
-                String columnName = columnRs.getString("COLUMN_NAME");  //字段名称
-                int dataType = columnRs.getInt("DATA_TYPE");            //SQL类型,来自java.sql.Types
-                String typeName = columnRs.getString("TYPE_NAME");      //类型名称，数据源依赖
-                int columnSize = columnRs.getInt("COLUMN_SIZE");        //列大小
-                int decimalDigits = columnRs.getInt("DECIMAL_DIGITS");  //小数部分位数
-                String remarks = DbUtils.getColumnRemarks(columnRs, databaseMetaData, introspectedTable.getTableName(), columnName);     //备注，列描述
-                String columnDef = DbUtils.getColumnDefault(columnRs, databaseMetaData);   //该列默认值
+            while (rs.next()) {
+                String columnName = rs.getString("COLUMN_NAME");  //字段名称
+                String typeName = rs.getString("TYPE_NAME");      //类型名称，数据源依赖
+                int dataType = rs.getInt("DATA_TYPE");            //SQL类型,来自java.sql.Types
+                int columnSize = rs.getInt("COLUMN_SIZE");        //列大小
+                int decimalDigits = rs.getInt("DECIMAL_DIGITS");  //小数部分位数
 
-                boolean isNullable = (DatabaseMetaData.columnNullable == columnRs.getInt("NULLABLE")); // 是否可以非空
-                boolean isAutoincrement = DbUtils.isColumnAutoincrement(columnRs, databaseMetaData);    // 是否自增
-                boolean isPk = primaryKeys.contains(columnName);                // 是否主键
+                String defaultValue = rs.getString("COLUMN_DEF");
+                String remarks = rs.getString("REMARKS");
+
+                if (remarks == null) {
+                    remarks = DbUtils.getColumnRemarks(rs, databaseMetaData, introspectedTable.getTableName(), columnName);     //备注，列描述
+                }
+                if (defaultValue == null) {
+                    defaultValue = DbUtils.getColumnDefault(rs, databaseMetaData);   //该列默认值
+                }
+                boolean nullable = DatabaseMetaData.columnNullable == rs.getInt("NULLABLE");
+                boolean autoIncrement = "YES".equals(rs.getString("IS_AUTOINCREMENT"));
+                boolean generatedColumn = "YES".equals(rs.getString("IS_GENERATEDCOLUMN"));
+                boolean pk = primaryKeys.contains(columnName);                // 是否主键
                 boolean isIndexInfo = indexInfos.contains(columnName);              // 是否索引
-                boolean isIndexUnique = indexUniques.contains(columnName);      // 是否唯一索引
+                boolean indexUnique = indexUniques.contains(columnName);      // 是否唯一索引
 
                 Column column = new Column();
                 column.setColumnName(columnName);
-                column.setSqlType(dataType);
-                column.setSqlTypeName(typeName);
+                column.setJdbcType(dataType);
+                column.setJavaTypeName(typeName);
                 column.setColumnSize(columnSize);
                 column.setDecimalDigits(decimalDigits);
-                column.setDefaultValue(columnDef);
+                column.setDefaultValue(defaultValue);
                 column.setRemark(remarks);
-                column.setNullable(isNullable);
-                column.setPrimaryKey(isPk);
+                column.setNullable(nullable);
+                column.setPrimaryKey(pk);
                 column.setIndexInfo(isIndexInfo);
-                column.setIndexUnique(isIndexUnique);
-                column.setAutoIncrement(isAutoincrement);
+                column.setIndexUnique(indexUnique);
+                column.setAutoIncrement(autoIncrement);
                 column.initialize();
                 columns.add(column);
                 System.out.println("[column] -> 解析字段:" + columnName);

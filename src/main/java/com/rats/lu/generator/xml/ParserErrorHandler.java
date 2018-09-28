@@ -7,6 +7,14 @@ import org.xml.sax.SAXParseException;
 import java.text.MessageFormat;
 import java.util.List;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class ParserErrorHandler implements ErrorHandler {
 
     private List<String> warnings;

@@ -7,13 +7,14 @@ import com.rats.lu.generator.utils.TypeResolver;
 
 
 /**
- * ClassName : Column
- * Description : 表的列描述
+ * Copyright (C) 2016 
+ * <p/>
  *
- * @version : v1.1
  * @author : hanbing
- * @since : 2015/5/29
+ * @version : v1.0
+ * @since : 2016/12/12
  */
+
 public class Column {
     private String columnName;
     private String fieldName;
@@ -22,7 +23,7 @@ public class Column {
 
     private int columnSize;
     private int decimalDigits;
-    private int sqlType;
+
     private int pkCount;
 
     private boolean indexInfo;
@@ -33,15 +34,17 @@ public class Column {
     private boolean autoIncrement;
 
     private String javaType;
-    private String sqlTypeName;
     private String javaTypeName;
+    private int jdbcType;
+    private String jdbcTypeName;
+
 
 
     public void initialize() {
         this.fieldName = StringTools.toCamel(columnName);
-        this.javaType = TypeResolver.convertToJavaType(getSqlType(), getColumnSize());
-        this.javaTypeName = TypeResolver.convertToJavaTypeName(getSqlType(), getColumnSize());
-        this.sqlTypeName = TypeResolver.convertToSqlType(getSqlType(), getColumnSize());
+        this.javaType = TypeResolver.convertToJavaType(getJdbcType(), getColumnSize());
+        this.javaTypeName = TypeResolver.convertToJavaTypeName(getJdbcType(), getColumnSize());
+        this.jdbcTypeName = TypeResolver.convertToSqlType(getJdbcType(), getColumnSize());
 
     }
 
@@ -93,12 +96,12 @@ public class Column {
         this.decimalDigits = decimalDigits;
     }
 
-    public int getSqlType() {
-        return sqlType;
+    public int getJdbcType() {
+        return jdbcType;
     }
 
-    public void setSqlType(int sqlType) {
-        this.sqlType = sqlType;
+    public void setJdbcType(int jdbcType) {
+        this.jdbcType = jdbcType;
     }
 
     public boolean isIndexInfo() {
@@ -157,12 +160,20 @@ public class Column {
         this.javaType = javaType;
     }
 
-    public String getSqlTypeName() {
-        return sqlTypeName;
+    public int getPkCount() {
+        return pkCount;
     }
 
-    public void setSqlTypeName(String sqlTypeName) {
-        this.sqlTypeName = sqlTypeName;
+    public void setPkCount(int pkCount) {
+        this.pkCount = pkCount;
+    }
+
+    public String getJdbcTypeName() {
+        return jdbcTypeName;
+    }
+
+    public void setJdbcTypeName(String jdbcTypeName) {
+        this.jdbcTypeName = jdbcTypeName;
     }
 
     public String getJavaTypeName() {

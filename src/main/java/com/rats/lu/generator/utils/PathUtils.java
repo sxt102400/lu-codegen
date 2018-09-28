@@ -6,6 +6,14 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class PathUtils {
 
     public static boolean isAbsolutePath(String path) {

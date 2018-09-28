@@ -5,10 +5,10 @@
     <resultMap id="${className}Map" type="${tpl@entity.packageName}.${className}">
 
 <#list table.pkColumns as column>
-        <id column="${column.columnName}" property="${column.fieldName}" jdbcType="${column.sqlTypeName}" />
+        <id column="${column.columnName}" property="${column.fieldName}" jdbcType="${column.jdbcTypeName}" />
 </#list>
 <#list table.notPkColumns as column>
-        <result column="${column.columnName}" property="${column.fieldName}" jdbcType="${column.sqlTypeName}" />
+        <result column="${column.columnName}" property="${column.fieldName}" jdbcType="${column.jdbcTypeName}" />
 </#list>
     </resultMap>
 
@@ -17,7 +17,7 @@
     </sql>
 
     <select id="countByExample" parameterType="${example}" resultType="java.lang.Integer">
-        select count(1) from ${table.tableName}
+        select count(*) from ${table.tableName}
         <if test="_parameter != null">
             <include refid="common.Example_Where_Clause" />
         </if>
@@ -129,12 +129,12 @@
 
 <#-- columnParamList -->
 <#macro columnParamList>
-        <#list table.columns as column> ${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if> </#list>
+        <#list table.columns as column> ${"#"}{${column.fieldName}, jdbcType=${column.jdbcTypeName}} <#if column_has_next>,</#if> </#list>
 </#macro>
 
 <#-- pkCondition -->
 <#macro pkCondition>
-        <#list table.pkColumns as column> ${column.columnName} = ${"#"}{${column.fieldName} ,jdbcType=${column.sqlTypeName}} <#if column_has_next> and </#if> </#list>
+        <#list table.pkColumns as column> ${column.columnName} = ${"#"}{${column.fieldName} ,jdbcType=${column.jdbcTypeName}} <#if column_has_next> and </#if> </#list>
 </#macro>
 
 <#-- testColumnList -->
@@ -150,7 +150,7 @@
 <#macro testColumnParameList>
 <#list table.columns as column>
         <if test="${column.fieldName} != null">
-        ${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}},
+        ${"#"}{${column.fieldName}, jdbcType=${column.jdbcTypeName}},
         </if>
  </#list>
 </#macro>
@@ -158,14 +158,14 @@
 <#-- updateColumnList -->
 <#macro updateColumnList>
 <#list table.columns as column>
-        ${column.columnName} = ${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if>
+        ${column.columnName} = ${"#"}{${column.fieldName}, jdbcType=${column.jdbcTypeName}} <#if column_has_next>,</#if>
 </#list>
 </#macro>
 
 <#-- updateColumnListWithMap -->
 <#macro updateColumnListWithMap>
 <#list table.columns as column>
-        ${column.columnName} = ${"#"}{record.${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if>
+        ${column.columnName} = ${"#"}{record.${column.fieldName}, jdbcType=${column.jdbcTypeName}} <#if column_has_next>,</#if>
 </#list>
 </#macro>
 
@@ -173,7 +173,7 @@
 <#macro testUpdateColumnListWithMap>
 <#list table.columns as column>
         <if test="record.${column.fieldName} != null">
-        ${column.columnName} = ${"#"}{record.${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if>
+        ${column.columnName} = ${"#"}{record.${column.fieldName}, jdbcType=${column.jdbcTypeName}} <#if column_has_next>,</#if>
         </if>
 </#list>
 </#macro>
@@ -182,7 +182,7 @@
 <#macro testUpdateColumnList>
 <#list table.notPkColumns as column>
         <if test="${column.fieldName} != null">
-        ${column.columnName} =${"#"}{${column.fieldName}, jdbcType=${column.sqlTypeName}} <#if column_has_next>,</#if>
+        ${column.columnName} =${"#"}{${column.fieldName}, jdbcType=${column.jdbcTypeName}} <#if column_has_next>,</#if>
         </if>
 </#list>
  </#macro>

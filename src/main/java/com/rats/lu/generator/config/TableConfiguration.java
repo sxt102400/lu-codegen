@@ -1,16 +1,38 @@
 package com.rats.lu.generator.config;
 
-public class TableConfiguration extends PropertyHolder{
+import com.rats.lu.generator.table.Column;
+import com.rats.lu.generator.table.ColumnOverride;
 
-    private String tableName;
+import java.util.ArrayList;
+import java.util.List;
 
-    private String className;
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
+public class TableConfiguration extends PropertyHolder {
 
-    private String catalog;
+    protected String tableName;
 
-    private String schema;
+    protected String className;
+	
+	protected String subPackageName;
 
-    private String fullName;
+    protected String catalog;
+
+    protected String schema;
+
+    protected String fullName;
+
+    protected List<ColumnOverride> columnOverrides;
+
+    public TableConfiguration() {
+        this.columnOverrides = new ArrayList();
+    }
 
     public String getTableName() {
         return tableName;
@@ -39,8 +61,45 @@ public class TableConfiguration extends PropertyHolder{
     public String getSchema() {
         return schema;
     }
-
-    public void setSchema(String schema) {
+	
+	public void setSchema(String schema) {
         this.schema = schema;
     }
+	
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+	
+	  public String getSubPackageName() {
+        return subPackageName;
+    }
+
+    public void setSubPackageName(String subPackageName) {
+        this.subPackageName = subPackageName;
+    }
+
+    public List<ColumnOverride> getColumnOverrides() {
+        return columnOverrides;
+    }
+
+    public void addColumnOverride(ColumnOverride columnOverride) {
+        this.columnOverrides.add(columnOverride);
+    }
+
+    public ColumnOverride getColumnOverride(String columnName) {
+        for (ColumnOverride columnOverride : columnOverrides) {
+            if (columnName!=null && columnName.equalsIgnoreCase(columnOverride.getColumnName())) {
+                return columnOverride;
+            }
+        }
+        return null;
+    }
+
+
+
+
 }

@@ -1,27 +1,26 @@
 package com.rats.lu.generator.table;
 
 
+import com.rats.lu.generator.config.TableConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ClassName : IntrospectedTable
- * Description : 表描述
+ * Copyright (C) 2016 
+ * <p/>
  *
  * @author : hanbing
- * @version : v1.1
- * @since : 2015/5/29
+ * @version : v1.0
+ * @since : 2016/12/12
  */
-public class IntrospectedTable {
-    protected String tableName;
-    protected String className;
-    protected String catalog;
-    protected String schema;
+public class IntrospectedTable  extends TableConfiguration {
 
     protected String remark;
     protected String tableType;
     protected String tableNameAlias;
     protected int pkCount;
+
     /**
      * 表中所有列
      */
@@ -37,37 +36,7 @@ public class IntrospectedTable {
 
     public List<Column> blobColumns = new ArrayList<Column>();
 
-    public String getTableName() {
-        return tableName;
-    }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
-    }
-
-    public String getSchema() {
-        return schema;
-    }
-
-    public void setSchema(String schema) {
-        this.schema = schema;
-    }
 
     public String getRemark() {
         return remark;

@@ -2,6 +2,14 @@ package com.rats.lu.generator.utils;
 
 import java.sql.*;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class DbUtils {
 
     public static String getTableRemarks(ResultSet rs, DatabaseMetaData databaseMetaData, String tableName) throws SQLException {
@@ -140,7 +148,7 @@ public class DbUtils {
             Connection conn = metaData.getConnection();
             pstmt = conn.prepareStatement(sql);
             for (int i = 0; i < params.length; i++) {
-                pstmt.setObject(i, params[i]);
+                pstmt.setObject((i+1), params[i]);
             }
             rs = pstmt.executeQuery();
             if (rs.next()) {

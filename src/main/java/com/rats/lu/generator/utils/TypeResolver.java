@@ -5,16 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ClassName : sql操作类
- * Description : sql操作类
+ * Copyright (C) 2016 
+ * <p/>
  *
- * @version : v1.1
  * @author : hanbing
- * @since : 2015/5/29
+ * @version : v1.0
+ * @since : 2016/12/12
  */
 public class TypeResolver {
-
-
 
     /**
      * sql类型转为java的类型名称（不包含包前缀）

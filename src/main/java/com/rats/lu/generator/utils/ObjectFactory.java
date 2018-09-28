@@ -1,10 +1,21 @@
 package com.rats.lu.generator.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class ObjectFactory {
 
     private static List<ClassLoader> externalClassLoaders = new ArrayList();
@@ -85,5 +96,76 @@ public class ObjectFactory {
         return url;
     }
 
+
+    public static Object resolveParams(Object beanObj, Map<String, Object> context) {
+        Class<?> classType = beanObj.getClass();
+        Object newInstance = null;
+        try {
+            newInstance = classType.newInstance();
+            Field[] fields = beanObj.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                String name = field.getName();
+                String type = field.getType().getTypeName();
+                String firstLetter = name.substring(0, 1).toUpperCase();
+                String getMethodName;
+                String setMethodName;
+                if ("boolean".equals(type) || "java.lang.Boolean".equals(type)) {
+                    getMethodName = "is" + firstLetter + name.substring(1);
+                    setMethodName = "set" + firstLetter + name.substring(1);
+                } else {
+                    getMethodName = "get" + firstLetter + name.substring(1);
+                    setMethodName = "set" + firstLetter + name.substring(1);
+                }
+                Method getMethod = classType.getMethod(getMethodName, new Class[]{});
+                Method setMethod = classType.getMethod(setMethodName, new Class[]{field.getType()});
+
+                if ("java.lang.String".equals(type)) {
+                    Object value = getMethod.invoke(beanObj, new Object[]{});
+                    String valueStr = (String) value;
+                    valueStr = parsePropertyTokens(valueStr, context);
+                    setMethod.invoke(newInstance, new Object[]{valueStr});
+                } else {
+                    Object value = getMethod.invoke(beanObj, new Object[]{});
+                    setMethod.invoke(newInstance, new Object[]{value});
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newInstance;
+
+    }
+
+
+    private static String parsePropertyTokens(String string, Map<String, Object> context) {
+        String OPEN = "${";
+        String CLOSE = "}";
+        String newString = string;
+        if (string != null) {
+            int start = string.indexOf("${");
+            for (int end = string.indexOf("}"); start > -1 && end > start; end = newString.indexOf("}", end)) {
+                String prepend = newString.substring(0, start);
+                String append = newString.substring(end + "}".length());
+                String propName = newString.substring(start + "${".length(), end);
+                String propValue = resolveProperty(propName, context);
+                if (propValue != null) {
+                    newString = prepend + propValue + append;
+                }
+
+                start = newString.indexOf("${", end);
+            }
+        }
+        return newString;
+    }
+
+    private static String resolveProperty(String key, Map<String, Object> context) {
+        String property = null;
+        property = System.getProperty(key);
+        if (property == null && context.get(key) != null) {
+            property = context.get(key).toString();
+        }
+        return property;
+    }
 
 }

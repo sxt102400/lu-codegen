@@ -1,11 +1,19 @@
 package com.rats.lu.generator.config;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class ModuleConfiguration extends PropertyHolder{
 
     private String name;
     private String moduleDir;
-    private String source;
-    private String resource;
+    private String sources;
+    private String resources;
     private String templates;
     private boolean sub;
 
@@ -17,20 +25,20 @@ public class ModuleConfiguration extends PropertyHolder{
         this.name = name;
     }
 
-    public String getSource() {
-        return source;
+    public String getSources() {
+        return sources;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setSources(String sources) {
+        this.sources = sources;
     }
 
-    public String getResource() {
-        return resource;
+    public String getResources() {
+        return resources;
     }
 
-    public void setResource(String resource) {
-        this.resource = resource;
+    public void setResources(String resources) {
+        this.resources = resources;
     }
 
     public String getTemplates() {

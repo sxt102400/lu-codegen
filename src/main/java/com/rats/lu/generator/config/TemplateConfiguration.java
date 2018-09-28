@@ -1,5 +1,13 @@
 package com.rats.lu.generator.config;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class TemplateConfiguration extends PropertyHolder{
 
     private String name;

@@ -8,6 +8,14 @@ import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Copyright (C) 2016 
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class FreemarkerRender implements TemplateRender {
 
     private File projectDir;
@@ -48,7 +56,7 @@ public class FreemarkerRender implements TemplateRender {
             if(!outFile.exists())  {
                 outFile.createNewFile();
             } else {
-                overrideInfo = "was overwritten";
+                overrideInfo = "was override";
             }
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), "UTF-8"));
             template.process(context, writer);

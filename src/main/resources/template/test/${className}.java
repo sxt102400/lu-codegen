@@ -1,7 +1,5 @@
 package ${tpl@entity.packageName};
-
 <#include "global.ftl">
-
 import java.io.Serializable;
 import java.util.Date;
 

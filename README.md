@@ -16,7 +16,7 @@
 
 1. 功能演进中，许多配置待完善
 2. 很多地方需要手动配置，适配性待完善
-3. 可能存在很多bug
+3. 不谦虚的说，可能存在许多bug
 
 
 
@@ -73,12 +73,22 @@
 	
     <!-- 配置需要生成代码的表，tableName：表名; className：类名 -->
     <tables>
-        <table  tableName="t_sys_user" className="SysUser" ></table>
-        <table tableName="icy_role" className="Role" ></table>
-        <table tableName="icy_funcright" className="Funcright" ></table>
-        <table tableName="icy_menu" className="Menu" ></table>-->
-        <table tableName="icy_user" className="User" ></table>
-        <table tableName="icy_depart" className="Depart" ></table>
+        <table  tableName="t_sys_user" className="SysUser" >
+			<columnOverride column="id" field="id"/> cx
+			<columnOverride column="type" field="type"/>
+			<columnOverride column="username" field="username"/>
+            <columnOverride column="age" field="age"/>
+			<columnOverride column="password" field="myPassword" ignore="true"/>
+        </table>
+        <table tableName="test" className="Test" >
+        	<columnOverride column="testColumn"
+				field="testColumnField"
+				javaType="Long"
+				jdbcType="VARCHAR"
+				ignore="true"
+				override="true"
+			/>
+        </table>
     </tables>
 
 
@@ -165,7 +175,7 @@
 - name： 模板名称
 - packageName：生成类的包名称
 - fileName：模板文件名称
-- type：模板类型，例如 type=xml ,会生成文件到 resource目录
+- type：模板类型，例如 `type=xml` ,会生成文件到 `src/main/resources`目录
     > 模板文件名可以使用参数变量，生成时会根据当前的context，同时转换模板文件名
     >
     > 例如：${className}Mapper.java
@@ -179,12 +189,12 @@
 通用参数如下:
 
 - name： 模块名称
-- source：source目录路径, 若无配置默认src/main/java
-- resource：resource目录路径, 若无配置默认src/main/resource
-- templates：此模块关联的模板。
+- sources：sources目录路径, 若无配置默认src/main/java
+- resources：resources目录路径, 若无配置默认src/main/resource
+- templates：此模块关联的模板，可以有多个值。
     >  只有在此声明的模板才会在当前模块中生成。模板可以包含多个，使用`,`分隔
     >
-    >  例如：templates="controller,service,serviceImpl,dao,mapper,entity,xmlMapper"
+    >  例如：`templates="controller,service,serviceImpl,dao,mapper,entity,xmlMapper"`
 
 
 
@@ -204,12 +214,25 @@
 
 - schema： schema
 
+- subPackageName：子包名。
+> 实际包目录由[ template.packageName + table.subPackageName ] 组成
+
+
+**columnOverride**
+
+数据库字段覆写配置
+- column：数据库中列名
+- field： 对应Java Bean的属性名，可不做设置，默认根据column生成
+- javaType： java的默认类型，可不做设置，自动识别
+- jdbcType： jdbc的字段类型，可不做设置，自动识别
+- ignore：是否忽略字段，默认false，如果设置为true则表示忽略，将不会在xml和Java Bean中生成此column内容
+
+
 
 
 ## Context
 
 Context是指在模板中可以直接使用的变量
-
 
 
 **1. properties Context**
@@ -231,7 +254,7 @@ ${prop@<attr>}
 
 ```
 ${tpl@<name>.<attr>}   
-<name>为template标签的name，attr为module标签的属性key，例如  ${tpl@mapper.fileName}  
+<name>为template标签的name，attr为template标签的属性key，例如  ${tpl@mapper.fileName}  
 ```
 
 **3. modules Context**
@@ -242,7 +265,7 @@ ${tpl@<name>.<attr>}
 
 ```
 ${mod@<name>.<attr>}   
-<name>为module标签的name，attr为module标签的属性key，例如  ${mod@hello.source}  
+<name>为module标签的name，attr为module标签的属性key，例如  ${mod@hello-module.source}  
 ```
 
 **4. table Context**
