@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
-        PUBLIC "-//rats.org//Lu Generator Configuration 1.0//EN"
-        "com/rats/lu/generator/config/xml/lu-generator-config_1_0.dtd">
+        PUBLIC "-//rats.org//DTD Lu Generator Configuration 1.0//EN"
+        "http://rats.org/dtd/lu-generator-config_1_0.dtd">
 <configuration>
 
     <properties resource="jdbc.properties"/>

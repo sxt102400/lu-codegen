@@ -1,6 +1,7 @@
 package com.rats.lu.generator.api;
 
 import com.rats.lu.generator.config.Configuration;
+import com.rats.lu.generator.config.ParserEntityResolver;
 import com.rats.lu.generator.config.PropertyHolder;
 import com.rats.lu.generator.exception.XMLParserException;
 import com.rats.lu.generator.xml.ParserErrorHandler;
@@ -51,6 +52,7 @@ public class ConfigurationParser extends PropertyHolder {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             ParserErrorHandler handler = new ParserErrorHandler(this.warnings, this.errors);
+            builder.setEntityResolver(new ParserEntityResolver());
             builder.setErrorHandler(handler);
             Document document = builder.parse(inputSource);
 
