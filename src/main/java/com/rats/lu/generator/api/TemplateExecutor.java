@@ -116,12 +116,12 @@ public class TemplateExecutor {
         //String resource = module.getResource();
         if (ConstantConfig.TYPE_XML.equalsIgnoreCase(template.getType()) ||
                 ConstantConfig.TYPE_XMLMAPPER.equalsIgnoreCase(template.getType())) {
-            String resource = module.getResource();
+            String resource = module.getResources();
             if (StringUtils.isNotBlank(resource)) {
                 pathList.add(resource);
             }
         } else {
-            String source = module.getSource();
+            String source = module.getSources();
             if (StringUtils.isNotBlank(source)) {
                 pathList.add(source);
             }
