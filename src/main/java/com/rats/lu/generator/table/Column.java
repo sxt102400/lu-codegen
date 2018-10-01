@@ -1,10 +1,7 @@
 package com.rats.lu.generator.table;
 
-
-
 import com.rats.lu.generator.utils.StringTools;
 import com.rats.lu.generator.utils.TypeResolver;
-
 
 /**
  * Copyright (C) 2016 
@@ -14,18 +11,25 @@ import com.rats.lu.generator.utils.TypeResolver;
  * @version : v1.0
  * @since : 2016/12/12
  */
-
 public class Column {
     private String columnName;
     private String fieldName;
     private String defaultValue;
     private String remark;
 
+
+    private int sqlType;
+    private String javaType;
+    private String fullJavaType;
+    private String jdbcType;
+
+
+
+
     private int columnSize;
     private int decimalDigits;
 
     private int pkCount;
-
     private boolean indexInfo;
     private boolean indexUnique;
     private boolean nullable;
@@ -33,19 +37,11 @@ public class Column {
     private boolean foreignkey;
     private boolean autoIncrement;
 
-    private String javaType;
-    private String javaTypeName;
-    private int jdbcType;
-    private String jdbcTypeName;
-
-
-
     public void initialize() {
         this.fieldName = StringTools.toCamel(columnName);
-        this.javaType = TypeResolver.convertToJavaType(getJdbcType(), getColumnSize());
-        this.javaTypeName = TypeResolver.convertToJavaTypeName(getJdbcType(), getColumnSize());
-        this.jdbcTypeName = TypeResolver.convertToSqlType(getJdbcType(), getColumnSize());
-
+        this.javaType = TypeResolver.convertToJavaType(sqlType, getColumnSize());
+        this.jdbcType = TypeResolver.convertToJdbcType(sqlType, getColumnSize());
+        this.fullJavaType = TypeResolver.convertToFullJavaType(sqlType, getColumnSize());
     }
 
     public String getColumnName() {
@@ -96,13 +92,6 @@ public class Column {
         this.decimalDigits = decimalDigits;
     }
 
-    public int getJdbcType() {
-        return jdbcType;
-    }
-
-    public void setJdbcType(int jdbcType) {
-        this.jdbcType = jdbcType;
-    }
 
     public boolean isIndexInfo() {
         return indexInfo;
@@ -168,19 +157,27 @@ public class Column {
         this.pkCount = pkCount;
     }
 
-    public String getJdbcTypeName() {
-        return jdbcTypeName;
+    public String getFullJavaType() {
+        return fullJavaType;
     }
 
-    public void setJdbcTypeName(String jdbcTypeName) {
-        this.jdbcTypeName = jdbcTypeName;
+    public void setFullJavaType(String fullJavaType) {
+        this.fullJavaType = fullJavaType;
     }
 
-    public String getJavaTypeName() {
-        return javaTypeName;
+    public int getSqlType() {
+        return sqlType;
     }
 
-    public void setJavaTypeName(String javaTypeName) {
-        this.javaTypeName = javaTypeName;
+    public void setSqlType(int sqlType) {
+        this.sqlType = sqlType;
+    }
+
+    public String getJdbcType() {
+        return jdbcType;
+    }
+
+    public void setJdbcType(String jdbcType) {
+        this.jdbcType = jdbcType;
     }
 }

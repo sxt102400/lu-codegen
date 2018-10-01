@@ -29,7 +29,7 @@ public class LuGenarator {
     private JdbcConnectionFactory connectionFactory;
     private List<String> warnings;
 
-    public LuGenarator(Configuration configuration, List<String> warnings) {
+    public LuGenarator(Configuration configuration) {
         if (configuration == null) {
             throw new IllegalArgumentException("configuration cant be null");
         } else {
@@ -42,22 +42,18 @@ public class LuGenarator {
             this.connectionFactory = new JdbcConnectionFactory(this.jdbcConnectionConfiguration);
             if (warnings == null) {
                 this.warnings = new ArrayList();
-            } else {
-                this.warnings = warnings;
             }
         }
     }
 
     public void generate() throws SQLException, IOException {
         List<TableConfiguration> tableConfigurations = configuration.getTableConfigurations();
-
-
-        List<IntrospectedTable> introspectedTables = new ArrayList<IntrospectedTable>();
+        List<IntrospectedTable> introspectedTables = new ArrayList<>();
         for (TableConfiguration tableConfiguration : tableConfigurations) {
             Connection connection = connectionFactory.getConnection();
             DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(connection, tableConfiguration);
             IntrospectedTable table = databaseIntrospector.introspectTable();
-            if (table != null) {
+            if (table != null && table.getClassName()!= null) {
                 introspectedTables.add(table);
             }
             connectionFactory.closeConnection(connection);
@@ -70,5 +66,11 @@ public class LuGenarator {
         System.out.println(MsgFmt.getString("[success] 文件生成完成！！"));
     }
 
+    public List<String> getWarnings() {
+        return warnings;
+    }
 
+    public void setWarnings(List<String> warnings) {
+        this.warnings = warnings;
+    }
 }

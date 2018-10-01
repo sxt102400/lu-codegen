@@ -1,4 +1,4 @@
-package ${tpl@controller.packageName};
+package ${ @tpl_controller.packageName};
 
 <#include "global.ftl">
 
@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-import ${tpl@entity.packageName}.${className};
-import ${tpl@service.packageName}.${className}Service;
+import ${@tpl_entity.packageName}.${className};
+import ${@tpl_service.packageName}.${className}Service;
 import ${page};
 
 /** ${copyright}

@@ -1,7 +1,6 @@
 package com.rats.lu.generator.config;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -27,13 +26,13 @@ public class Configuration {
 
     public Configuration(){
         if(templateConfigurations == null) {
-            templateConfigurations = new ArrayList<TemplateConfiguration>();
+            templateConfigurations = new ArrayList<>();
         }
         if(moduleConfigurations == null) {
-            moduleConfigurations = new ArrayList<ModuleConfiguration>();
+            moduleConfigurations = new ArrayList<>();
         }
         if(tableConfigurations == null) {
-            tableConfigurations = new ArrayList<TableConfiguration>();
+            tableConfigurations = new ArrayList<>();
         }
     }
 

@@ -1,4 +1,4 @@
-package ${tpl@dao.packageName};
+package ${@tpl_dao.packageName};
 
 <#include "global.ftl">
 
@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import ${example};
-import ${tpl@entity.packageName}.${className};
-import ${tpl@mapper.packageName}.${className}Mapper;
+import ${@tpl_entity.packageName}.${className};
+import ${@tpl_mapper.packageName}.${className}Mapper;
 
 /** ${copyright}
  *

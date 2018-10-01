@@ -108,7 +108,7 @@ public class TemplateExecutor {
          *  outputFile
          */
         List<String> pathList = new ArrayList<String>();
-        String moduleDir = module.getModuleDir() != null ? module.getModuleDir() : module.getName();
+        String moduleDir = module.getModuleDir();
         if (StringUtils.isNotBlank(moduleDir)) {
             pathList.add(moduleDir);
         }
@@ -166,7 +166,6 @@ public class TemplateExecutor {
         context.put("subPackageName", introspectedTable.getSubPackageName());
         context.put("catalog", introspectedTable.getCatalog());
         context.put("schema", introspectedTable.getSchema());
-
         context.put("entityName", StringUtils.uncapitalize(introspectedTable.getClassName()));
         String author = configuration.getProperties().getProperty("author");
         context.put("author", StringUtils.defaultIfBlank(author, System.getProperty("user.name")));
@@ -174,15 +173,15 @@ public class TemplateExecutor {
         Properties properties = configuration.getProperties();
         for (Object keyObj : properties.keySet()) {
             String key = (String) keyObj;
-            context.put("prop@" + key.trim(), properties.getProperty(key));
+            context.put("@prop_" + key.trim(), properties.getProperty(key));
         }
         List<ModuleConfiguration> moduleConfiguration = configuration.getModuleConfigurations();
         for (ModuleConfiguration module : moduleConfiguration) {
-            context.put("mod@" + module.getName().trim(), ObjectFactory.resolveParams(module ,context));
+            context.put("@mod_" + module.getName().trim(), ObjectFactory.resolveParams(module ,context));
         }
         List<TemplateConfiguration> templateConfigurations = configuration.getTemplateConfigurations();
         for (TemplateConfiguration template : templateConfigurations) {
-            context.put("tpl@" + template.getName().trim(), ObjectFactory.resolveParams(template ,context));
+            context.put("@tpl_" + template.getName().trim(), ObjectFactory.resolveParams(template ,context));
         }
         return context;
     }

@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.Properties;
 
 /**
- * Copyright (C) 2016 
+ * Copyright (C) 2016
  * <p/>
  *
  * @author : hanbing
@@ -23,7 +23,6 @@ import java.util.Properties;
 public class XmlConfigurationParser {
 
     Properties prop;
-
 
     public XmlConfigurationParser() {
         prop = new Properties();
@@ -112,15 +111,18 @@ public class XmlConfigurationParser {
                     ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
                     Properties attributes = this.parseAttributes(childNode);
                     String name = attributes.getProperty("name");
-                    String sources = StringUtils.defaultIfBlank(attributes.getProperty("sources"), ConstantConfig.DEFUAULT_SOURCE);
-                    String resources = StringUtils.defaultIfBlank(attributes.getProperty("resources"), ConstantConfig.DEFUAULT_RESOURCE);
+                    String moduleDir = attributes.getProperty("moduleDir");
+                    String sources = StringUtils.defaultIfBlank(attributes.getProperty("sources"), ConstantConfig.DEFAULT_SOURCES);
+                    String resources = StringUtils.defaultIfBlank(attributes.getProperty("resources"), ConstantConfig.DEFAULT_RESOURCES);
                     String templates = attributes.getProperty("templates");
                     String isSub = attributes.getProperty("isSub");
 
                     moduleConfiguration.setName(name);
+                    moduleConfiguration.setModuleDir(moduleDir);
                     moduleConfiguration.setSources(sources);
                     moduleConfiguration.setResources(resources);
                     moduleConfiguration.setTemplates(templates);
+                    moduleConfiguration.setSub(Boolean.valueOf(isSub));
                     configuration.addModuleConfiguration(moduleConfiguration);
                 }
             }
@@ -153,12 +155,13 @@ public class XmlConfigurationParser {
             }
         }
     }
+
     protected void parseTable(TableConfiguration tableConfiguration, Node node) throws XMLParserException {
         NodeList nodeList = node.getChildNodes();
-        for(int i = 0; i < nodeList.getLength(); ++i) {
+        for (int i = 0; i < nodeList.getLength(); ++i) {
             Node childNode = nodeList.item(i);
             if (childNode.getNodeType() == 1) {
-               if ("columnOverride".equals(childNode.getNodeName())) {
+                if ("columnOverride".equals(childNode.getNodeName())) {
                     this.parseColumnOverride(tableConfiguration, childNode);
                 }
             }
@@ -180,10 +183,10 @@ public class XmlConfigurationParser {
         columnOverride.setFieldName(field);
         columnOverride.setJavaType(javaType);
         columnOverride.setJdbcType(jdbcType);
-        if(StringUtils.isNotBlank( ignore)) {
+        if (StringUtils.isNotBlank(ignore)) {
             columnOverride.setIgnore(Boolean.valueOf(ignore));
         }
-        if(StringUtils.isNotBlank( serialize)) {
+        if (StringUtils.isNotBlank(serialize)) {
             columnOverride.setIgnore(Boolean.valueOf(serialize));
         }
         tableConfiguration.addColumnOverride(columnOverride);

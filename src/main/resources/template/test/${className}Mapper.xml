@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<#include "global.ftl">
+<mapper namespace="${@tpl_mapper.packageName}.${className}Mapper">
+    <resultMap id="BaseResultMap" type="${@tpl_entity.packageName}.${className}">
+
+<#list table.pkColumns as column>
+        <id column="${column.columnName}"  jdbcType="${column.jdbcType}" property="${column.fieldName}"/>
+</#list>
+<#list table.notPkColumns as column>
+        <result column="${column.columnName}" jdbcType="${column.jdbcType}" property="${column.fieldName}" />
+</#list>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+<@columnList/>
+    </sql>
+
+    <select id="selectByExample"  parameterType="${example}" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from ${table.tableName}
+        <if test="_parameter != null" >
+            <include refid="common.Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${r'${orderByClause}'}
+        </if>
+    </select>
+
+<#if table.pkCount == 1 >
+    <select id="selectByPrimaryKey" parameterType="<@pkType/>" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from ${table.tableName}
+        where <@pkCondition/>
+    </select>
+</#if>
+
+<#if table.pkCount == 1 >
+    <delete id="deleteByPrimaryKey" parameterType="<@pkType/>" >
+        delete from ${table.tableName}
+        where <@pkCondition/>
+    </delete>
+</#if>
+
+    <delete id="deleteByExample" parameterType="${example}">
+        delete from ${table.tableName}
+        <if test="_parameter != null" >
+            <include refid="common.Example_Where_Clause" />
+        </if>
+    </delete>
+
+    <insert id="insert" parameterType="${@tpl_entity.packageName}.${className}">
+        insert into ${table.tableName} (
+          <@columnList/>
+        ) values (
+          <@columnParamList/>
+        )
+    </insert>
+
+    <insert id="insertSelective" parameterType="${@tpl_entity.packageName}.${className}">
+        insert into ${table.tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <@testColumnList/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <@testColumnParameList/>
+        </trim>
+    </insert>
+
+
+    <update id="updateByExampleSelective" parameterType="map">
+        update ${table.tableName}
+        <set>
+            <@set_updateByExampleSelective/>
+        </set>
+        <if test="_parameter != null">
+            <include refid="common.Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByExample" parameterType="map">
+        update ${table.tableName}
+        set
+        <@set_updateByExample/>
+        <if test="_parameter != null">
+            <include refid="common.Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+<#if table.pkCount == 1 >
+    <update id="updateByPrimaryKeySelective" parameterType="${@tpl_entity.packageName}.${className}">
+        update ${table.tableName}
+        <set>
+            <@set_updateByPrimaryKeySelective/>
+        </set>
+        where <@pkCondition/>
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="${@tpl_entity.packageName}.${className}">
+        update ${table.tableName}
+        set
+            <@set_updateByPrimaryKey/>
+        where <@pkCondition/>
+    </update>
+
+</#if>
+
+
+    <select id="countByExample" parameterType="${example}" resultType="java.lang.Long">
+        select count(*) from ${table.tableName}
+        <if test="_parameter != null">
+            <include refid="common.Example_Where_Clause" />
+        </if>
+    </select>
+
+</mapper>
+
+
+<#-- MapperXML函数=================== -->
+<#-- columnList -->
+<#macro columnList>
+            <#list table.columns as column> ${column.columnName} <#if column_has_next>,</#if> </#list>
+</#macro>
+
+<#-- columnParamList -->
+<#macro columnParamList>
+            <#list table.columns as column> ${"#"}{${column.fieldName}, jdbcType=${column.jdbcType}} <#if column_has_next>,</#if> </#list>
+</#macro>
+
+<#-- pkCondition -->
+<#macro pkCondition>
+<#list table.pkColumns as column> ${column.columnName} = ${"#"}{${column.fieldName} ,jdbcType=${column.jdbcType}} <#if column_has_next> and </#if> </#list>
+</#macro>
+
+<#-- testColumnList -->
+<#macro testColumnList>
+<#list table.columns as column>
+        <if test="${column.fieldName} != null">
+            ${column.columnName},
+        </if>
+</#list>
+</#macro>
+
+<#-- testColumnParamList -->
+<#macro testColumnParameList>
+<#list table.columns as column>
+        <if test="${column.fieldName} != null">
+            ${"#"}{${column.fieldName}, jdbcType=${column.jdbcType}} ,
+        </if>
+ </#list>
+</#macro>
+
+
+<#-- set_updateByExample -->
+<#macro set_updateByExample>
+<#list table.columns as column>
+            ${column.columnName} = ${"#"}{record.${column.fieldName}, jdbcType=${column.jdbcType}} ,
+</#list>
+</#macro>
+
+<#-- updateByExampleSelective -->
+<#macro set_updateByExampleSelective>
+            <#list table.columns as column>
+            <if test="record.${column.fieldName} != null">
+                ${column.columnName} = ${"#"}{record.${column.fieldName}, jdbcType=${column.jdbcType}} ,
+            </if>
+            </#list>
+</#macro>
+
+
+<#-- set_updateByPrimaryKey -->
+<#macro set_updateByPrimaryKey>
+<#list table.columns as column>
+            ${column.columnName} = ${"#"}{${column.fieldName}, jdbcType=${column.jdbcType}} <#if column_has_next>,</#if>
+</#list>
+</#macro>
+
+
+<#-- set_updateByPrimaryKeySelective -->
+<#macro set_updateByPrimaryKeySelective>
+            <#list table.notPkColumns as column>
+            <if test="${column.fieldName} != null">
+                ${column.columnName} =${"#"}{${column.fieldName}, jdbcType=${column.jdbcType}} ,
+            </if>
+            </#list>
+ </#macro>

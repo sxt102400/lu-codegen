@@ -4,11 +4,12 @@
 
 ## 目的
 
-其实目前mybatis已经有官方的生成器 mybatis-generator，再造一个轮子的目的是为了方便修改，可拓展定制功能。
+其实目前mybatis已经有官方的生成器 mybatis-generator，再造一个轮子的目的是为了方便自己拓展定制功能。
 
-1. 不同于mybatis，是一个基于模板引擎的生成器，方便自己定制
-2. 模板文件订制自由，可以编写任意的模块模板并生成到项目中
-3. 参数配置自由，可以根据自己当前项目定制模板和参数
+1. 不同于mybatis，是一个基于模板引擎的生成器，可根据不同的项目单独定制
+2. 生成不限于数据库层，从view层到ben层都可以定制自己的生成文件
+3. 模板文件订制自由，可以编写任意的模块模板并生成到项目中
+4. 参数配置自由，可以根据自己当前项目定制模板和参数
 
 
 
@@ -36,82 +37,96 @@
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//rats.org//DTD Lu Generator Configuration 1.0//EN"
+        "http://rats.org/dtd/lu-generator-config_1_0.dtd">
 <configuration>
 
     <properties resource="jdbc.properties"/>
-    
-	<properties>
-		<!-- 工程和模板配置 -->
-		<property name="projectName" value="icy-web"></property>
-		<property name="projectDir" value="e://myproject"></property>
-        <property name="templateDir" value="template/my"></property>
-		<property name="override" value="true"></property>
+
+    <properties>
+
+        <!-- 工程和模板配置 -->
+        <property name="projectName" value="myproject"></property>
+        <property name="projectDir" value="../lu-generator"></property>
+        <property name="templateDir" value="template/test"></property>
+        <property name="override" value="true"></property>
     </properties>
-	
+
     <!-- jdbc配置 -->
-	<jdbcConnection driverClassName="${jdbc.driverClassName}"
-					url="${jdbc.url}"
-					username="${jdbc.username}"
-					password="${jdbc.password}">
-	</jdbcConnection>
-	
+    <jdbcConnection driverClassName="${jdbc.driverClassName}"
+                    url="${jdbc.url}"
+                    username="${jdbc.username}"
+                    password="${jdbc.password}">
+    </jdbcConnection>
+
+
     <!-- 模板文件配置 -->
-	<templates >
-		<template name="mapper" packageName="com.sxt.mapper" fileName="${className}mapper.java"     />
-		<template name="entity" packageName="com.sxt.entity" fileName="${className}.java"     />
-		<template name="xmlMapper" packageName="com.sxt.mapper" fileName="${className}_Mapper.xml" type="xml"  />
-	</templates>
-	
-  	<!-- 模块配置 -->
+    <templates>
+        <template name="controller" packageName="com.sxt.controller" fileName="${className}Controller.java"/>
+        <template name="service" packageName="com.sxt.service" fileName="${className}Service.java"/>
+        <template name="serviceImpl" packageName="com.sxt.service.impl" fileName="${className}ServiceImpl.java"/>
+        <template name="dao" packageName="com.sxt.dao" fileName="${className}Dao.java"/>
+        <template name="mapper" packageName="gen.mapper" fileName="${className}mapper.java"/>
+        <template name="entity" packageName="gen.entity" fileName="${className}.java"/>
+        <template name="xmlMapper" packageName="gen.xml" fileName="${className}Mapper.xml" type="xml"/>
+    </templates>
+
+    <!-- 模块配置 -->
     <modules>
-		<module name="myIn"
-			sources ="src/main/java"
-			resources ="src/main/resource"
-			templates="entity,mapper,xmlMapper"
-		/>
-	</modules>
-	
-    <!-- 配置需要生成代码的表，tableName：表名; className：类名 -->
+        <module name="lu-project"
+                moduleDir=""
+                sources="src/main/java"
+                resources="src/main/resources"
+                templates="entity,mapper,dao,service,serviceImpl,controller,xmlMapper"
+        />
+    </modules>
+
+
+    <!-- 配置需要生成代码的表，tableName：表名; className：类名 ,subPackageName: 子包名称-->
     <tables>
-        <table  tableName="t_sys_user" className="SysUser" >
-			<columnOverride column="id" field="id"/> cx
+        <table tableName="t_sys_user" className="SysUser">
+        </table>
+        <table tableName="t_sys_user_compk" className="SysUserCompk"></table>
+        <table tableName="test" className="Test">
+            <!-- all -->
+            <columnOverride column="testName"
+                            field="username"
+                            javaType="java.lang.Long"
+                            jdbcType="VARCHAR"
+                            ignore="true"/>
+            <!-- Override -->
+            <columnOverride column="id" field="id"/> 
 			<columnOverride column="type" field="type"/>
 			<columnOverride column="username" field="username"/>
             <columnOverride column="age" field="age"/>
-			<columnOverride column="password" field="myPassword" ignore="true"/>
-        </table>
-        <table tableName="test" className="Test" >
-        	<columnOverride column="testColumn"
-				field="testColumnField"
-				javaType="Long"
-				jdbcType="VARCHAR"
-				ignore="true"
-				override="true"
-			/>
+            
+            <!-- ignore -->
+			<columnOverride column="password"  ignore="true"/>   
+            <columnOverride column="status" ignore="true"/> 
+          
         </table>
     </tables>
 
-
-
-  </configuration>
+</configuration>
 ```
 
 
 
 **3. Java调用生成器**
 
-直接执行ShellRunner类。或者编写自己的调用类。
+直接执行AppRunner类。主要调用内容如下。
 
 ```java
- public static void main(String[] args) {
-        String configFile= "generator.xml";
-        List<String> warnings = new ArrayList<String>();
-        InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFile);
-        ConfigurationParser cp = new ConfigurationParser();
+public static void main(String[] args) {
+
         try {
+            String configFile= "generator.xml";
+            InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFile);
+            ConfigurationParser cp = new ConfigurationParser();
             Configuration configuration = cp.parse(in);
-            LuGenarator genarator = new LuGenarator(configuration,warnings);
-            genarator.generate();
+            LuGenarator generator = new LuGenarator(configuration);
+            generator.generate();
         } catch (XMLParserException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -119,7 +134,7 @@
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+}
 ```
 
 
@@ -136,19 +151,24 @@
 
 ```xml
 <properties>
-	<property name="projectName" value="icy-web"></property>
-<properties>
+        <!-- 工程和模板配置 -->
+        <property name="projectName" value="myproject"></property>
+        <property name="projectDir" value="../lu-generator"></property>
+        <property name="templateDir" value="template/test"></property>
+        <property name="override" value="true"></property>
+ </properties>
 ```
 
 通用变量设置如下
 
+- projectName ：工程名称。没有什么用处。
+
 - projectDir ：工程目录路径。生成文件以此路径为根路径。
 
-- templateDir：模板目录路径。默认从生成器的resource目录开始查找。
+- templateDir：模板目录路径。默认从生成器的resources目录开始定位模板文件。
 
 - override： 生成模板时，如果存在文件是否覆盖
 
-- templateEngine:  模板引擎配置，目前默认freemarker。其他引擎待完善。
 
 
 
@@ -189,8 +209,13 @@
 通用参数如下:
 
 - name： 模块名称
+
+- moduleDir：模块目录。如果不配置则默认为父工程目录。
+
 - sources：sources目录路径, 若无配置默认src/main/java
+
 - resources：resources目录路径, 若无配置默认src/main/resource
+
 - templates：此模块关联的模板，可以有多个值。
     >  只有在此声明的模板才会在当前模块中生成。模板可以包含多个，使用`,`分隔
     >
@@ -215,14 +240,14 @@
 - schema： schema
 
 - subPackageName：子包名。
-> 实际包目录由[ template.packageName + table.subPackageName ] 组成
+> 实际生成文件的包目录由[ template.packageName + table.subPackageName ] 最终合并获得
 
 
 **columnOverride**
 
 数据库字段覆写配置
-- column：数据库中列名
-- field： 对应Java Bean的属性名，可不做设置，默认根据column生成
+- column：数据库中字段名（建议下划线分割单词）
+- field： 对应Java Bean的属性名，可不做设置，默认根据字段自动生成
 - javaType： java的默认类型，可不做设置，自动识别
 - jdbcType： jdbc的字段类型，可不做设置，自动识别
 - ignore：是否忽略字段，默认false，如果设置为true则表示忽略，将不会在xml和Java Bean中生成此column内容
@@ -230,7 +255,7 @@
 
 
 
-## Context
+## 模板Context变量
 
 Context是指在模板中可以直接使用的变量
 
@@ -239,33 +264,33 @@ Context是指在模板中可以直接使用的变量
 
 在properties标签中定义的变量。
 
-使用方式，使用prop@前缀
+使用方式，使用@prop_前缀
 
 ``` 
-${prop@<attr>}   
-<name>为properties的key，例如  ${prop@override} 
+${ @prop_<attr> }   
+<attr>为properties的name属性，例如 : ${ @prop_override} 
 ```
 
 **2. template Context**
 
 在templates标签中定义的模板变量。
 
-使用方式，使用tpl@前缀
+使用方式，使用@tpl_前缀
 
 ```
-${tpl@<name>.<attr>}   
-<name>为template标签的name，attr为template标签的属性key，例如  ${tpl@mapper.fileName}  
+${ @tpl_<name>.<attr>}   
+<name>为template标签的name名称，attr为template标签的属性，例如: ${  @tpl_mapper.fileName}  
 ```
 
 **3. modules Context**
 
 在modules 标签中定义的模板变量。
 
-使用方式，使用mod@前缀
+使用方式，使用@mod_前缀
 
 ```
-${mod@<name>.<attr>}   
-<name>为module标签的name，attr为module标签的属性key，例如  ${mod@hello-module.source}  
+$  @mode_<name>.<attr>}   
+<name>为module标签的name，attr为module标签的属性，例如: ${ @mode_my-module.sources}  
 ```
 
 **4. table Context**
@@ -286,8 +311,8 @@ table 描述
 | --------- | ---- | ---- | ---- |
 | table |  表信息    | IntrospectedTable  | ${table}   |
 | table.columns |  列信息    | List[Column] | ${ table.columns}   |
-| table.pkColumns |  主键列表    | List[Column] | ${ table.pkColumns}   |
-| table.notPkColumns |  非主键列列表    | List[Column] | ${ table.notPkColumns}   |
+| table.pkColumns |  主键字段列表  | List[Column] | ${ table.pkColumns}   |
+| table.notPkColumns |  非主键字段列表  | List[Column] | ${ table.notPkColumns}   |
 
 
 
@@ -295,25 +320,54 @@ Column属性：
 
 | context       | 说明 | 类型  | 示例  |
 | --------- | ---- | ---- | ---- |
-| columnName |      | String  |   |
-| fieldName |    | String  | |
-| defaultValue |      | String |    |
-| remark |      | String |    |
-| columnSize |      | int |    |
+| columnName | 表中字段名称 | String  | "username" |
+| fieldName | bean中属性名称 | String  | "username" |
+| defaultValue | 默认值 | String | "guest" |
+| remark | 备注 | String | "用户名" |
+| columnSize | 大小 | int | 20 |
 | decimalDigits |      |  |   |
-| sqlType |      | String |   |
-| javaType |      | String |   |
-| sqlTypeName |      | String |   |
-| javaTypeName |      | String |   |
-| primaryKey |      | boolean |   |
-| nullable |      | boolean |   |
-| autoIncrement |      | boolean |   |
-| foreignkey |      | boolean |   |
+| sqlType | sql类型 | int | 11 |
+| javaType | java类型 | String | String |
+| jdbcType | jdbc类型 | String | VARCHAR |
+| fullJavaType | java类型（全名称） | String | java.lang.String |
+| primaryKey | 是否主键 | boolean | false |
+| nullable | 是否可空 | boolean | false |
+| autoIncrement | 是否自增 | boolean | false |
+| foreignkey | 是否外键 | boolean | false |
 
 
 
 
-例如，生成bean中的所有field字段
+
+## 模板文件编写
+
+
+
+### 1. 模板和生成文件的位置
+
+如果当前模块名称为:modName，模板名称为：tplName，表名称为<tableName>
+
+模板文件的实际路径为：
+
+>  ```
+>  lu-generator的resources目录  +  @prop_templateDir + @tpl_<tplName>.fileName
+>  ```
+
+生成文件的路径为：
+
+>  ```
+>  @prop_projectDir + @mod_<modName>.moduleDir + @tpl_<tplName>.packageName + table.subPackageName +  @tpl_<tplName>.fileName
+> ```
+
+
+
+### 2. Freemark模板编写
+
+Freemark编写，就是普通的Freemark模板了，其中可以使用的模板context变量，见上节：模板Context变量
+
+
+
+例如，生成bean中的所有field字段，模板内容如下：
 
 ```
 <#list table.columns as column>
@@ -325,6 +379,8 @@ Column属性：
 
 </#list>
 ```
+
+
 
 
 

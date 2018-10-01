@@ -1,13 +1,12 @@
 package com.rats.lu.generator.config;
 
-import com.rats.lu.generator.table.Column;
 import com.rats.lu.generator.table.ColumnOverride;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (C) 2016 
+ * Copyright (C) 2016
  * <p/>
  *
  * @author : hanbing
@@ -19,14 +18,12 @@ public class TableConfiguration extends PropertyHolder {
     protected String tableName;
 
     protected String className;
-	
-	protected String subPackageName;
+
+    protected String subPackageName;
 
     protected String catalog;
 
     protected String schema;
-
-    protected String fullName;
 
     protected List<ColumnOverride> columnOverrides;
 
@@ -61,20 +58,12 @@ public class TableConfiguration extends PropertyHolder {
     public String getSchema() {
         return schema;
     }
-	
-	public void setSchema(String schema) {
+
+    public void setSchema(String schema) {
         this.schema = schema;
     }
-	
-    public String getFullName() {
-        return fullName;
-    }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-	
-	  public String getSubPackageName() {
+    public String getSubPackageName() {
         return subPackageName;
     }
 
@@ -92,14 +81,12 @@ public class TableConfiguration extends PropertyHolder {
 
     public ColumnOverride getColumnOverride(String columnName) {
         for (ColumnOverride columnOverride : columnOverrides) {
-            if (columnName!=null && columnName.equalsIgnoreCase(columnOverride.getColumnName())) {
+            if (columnName != null && columnName.equalsIgnoreCase(columnOverride.getColumnName())) {
                 return columnOverride;
             }
         }
         return null;
     }
-
-
 
 
 }

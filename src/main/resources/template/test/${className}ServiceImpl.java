@@ -1,4 +1,4 @@
-package ${tpl@serviceImpl.packageName};
+package ${@tpl_serviceImpl.packageName};
 
 <#include "global.ftl">
 
@@ -9,9 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ${tpl@entity.packageName}.${className};
-import ${tpl@mapper.packageName}.${className}Mapper;
-import ${tpl@service.packageName}.${className}Service;
+import ${@tpl_entity.packageName}.${className};
+import ${@tpl_mapper.packageName}.${className}Mapper;
+import ${@tpl_service.packageName}.${className}Service;
 import ${page};
 import ${example};
 

@@ -19,17 +19,17 @@ import java.util.List;
  * @version : v1.0
  * @since : 2016/12/12
  */
-public class ShellRunner {
+public class AppRunner {
 
     public static void main(String[] args) {
-        String configFile= "generator.xml";
-        List<String> warnings = new ArrayList<String>();
-        InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFile);
-        ConfigurationParser cp = new ConfigurationParser();
+
         try {
+            String configFile= "generator.xml";
+            InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFile);
+            ConfigurationParser cp = new ConfigurationParser();
             Configuration configuration = cp.parse(in);
-            LuGenarator genarator = new LuGenarator(configuration,warnings);
-            genarator.generate();
+            LuGenarator generator = new LuGenarator(configuration);
+            generator.generate();
         } catch (XMLParserException e) {
             e.printStackTrace();
         } catch (SQLException e) {

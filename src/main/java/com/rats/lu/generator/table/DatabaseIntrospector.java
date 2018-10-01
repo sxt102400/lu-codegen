@@ -26,8 +26,6 @@ public class DatabaseIntrospector {
     private Connection connection;
     private DatabaseMetaData databaseMetaData;
     private TableConfiguration tableConfiguration;
-    private List<String> warnings;
-    private List<TableConfiguration> tableConfigurations;
 
     public DatabaseIntrospector(Connection connection, TableConfiguration tableConfiguration) throws SQLException {
         this.connection = connection;
@@ -43,17 +41,18 @@ public class DatabaseIntrospector {
         String schema = tableConfiguration.getSchema();
         String subPackageName = tableConfiguration.getSubPackageName();
 
-
         assert StringUtils.isNotBlank(tableName) : "tableName can't null";
         assert databaseMetaData != null : "dbMetaData can't null";
 
-        IntrospectedTable table    = new IntrospectedTable();
-        table.setClassName(StringUtils.defaultIfBlank(className, StringTools.toCamel(tableName)));
-        table.setSubPackageName(subPackageName);
+        IntrospectedTable table = null;
+
 
         System.out.println(MsgFmt.getString("[start] 开始解析table信息：{0}", tableName));
         try (ResultSet rs = databaseMetaData.getTables(catalog, schema, tableName, null)) {
             if (rs.next()) {
+                table= new IntrospectedTable();
+                table.setClassName(StringUtils.defaultIfBlank(className, StringTools.toCamel(tableName)));
+                table.setSubPackageName(subPackageName);
                 table.setTableName(tableName);
                 String actTableName = rs.getString("TABLE_NAME");
                 String actTableType = rs.getString("TABLE_TYPE");
@@ -82,13 +81,13 @@ public class DatabaseIntrospector {
                     introspectedColumn.setFieldName(columnOverride.getFieldName());
                 }
                 if (StringUtils.isNotBlank(columnOverride.getJavaType())) {
-                    introspectedColumn.setJavaTypeName(columnOverride.getJavaType());
+                    introspectedColumn.setJavaType(columnOverride.getJavaType());
                 }
                 if (StringUtils.isNotBlank(columnOverride.getJdbcType())) {
-                    introspectedColumn.setJdbcTypeName(columnOverride.getJdbcType());
+                    introspectedColumn.setJdbcType(columnOverride.getJdbcType());
                 }
                 if (columnOverride.isSerialize()) {
-                   //TODO
+                   //NOTHING
                 }
                 if (!columnOverride.isIgnore()) {
                     columnList.add(introspectedColumn);
@@ -163,8 +162,8 @@ public class DatabaseIntrospector {
 
                 Column column = new Column();
                 column.setColumnName(columnName);
-                column.setJdbcType(dataType);
-                column.setJavaTypeName(typeName);
+                column.setSqlType(dataType);
+                column.setJdbcType(typeName);
                 column.setColumnSize(columnSize);
                 column.setDecimalDigits(decimalDigits);
                 column.setDefaultValue(defaultValue);

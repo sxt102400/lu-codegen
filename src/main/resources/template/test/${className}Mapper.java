@@ -1,4 +1,4 @@
-package ${tpl@mapper.packageName};
+package ${@tpl_mapper.packageName};
 
 <#include "global.ftl">
 
@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import ${example};
-import ${tpl@entity.packageName}.${className};
+import ${@tpl_entity.packageName}.${className};
 
 /** ${copyright}
  *
@@ -18,19 +18,17 @@ import ${tpl@entity.packageName}.${className};
  * @author : ${author!}
  * @since : ${now!}
  */
-public interface ${className}Mapper extends BaseMapper<T> {
+public interface ${className}Mapper {
 
     /**
-     * ${className}Mapper.countByExample
-     * Description: 根据查询条件，计算${table.tableName}记录总数
+     * Description: 根据查询条件，获取${table.tableName}记录总数
      *
-     * @param example 通用查询条件类
-     * @return int 结果个数
+     * @param example 查询条件
+     * @return long 结果个数
      */
-    int countByExample(Example example);
+    long countByExample(Example example);
 
     /**
-     * ${className}Mapper.deleteByExample
      * Description: 根据查询条件，删除${table.tableName}中记录
      *
      * @param example 通用查询条件类
@@ -40,7 +38,6 @@ public interface ${className}Mapper extends BaseMapper<T> {
 
 <#if table.pkCount == 1>
     /**
-     * ${className}Mapper.deleteByPrimaryKey
      * Description: 根据主键删除${table.tableName}中记录
      *
      * @param <@pkField/> 主键
@@ -50,41 +47,28 @@ public interface ${className}Mapper extends BaseMapper<T> {
 
 </#if>
     /**
-     * ${className}Mapper.insert
      * Description: 插入一个记录到${table.tableName}
      *
-     * @param record ${table.tableName}的bean对象
+     * @param record 插入的bean对象
      * @return int  插入个数
      */
     int insert(${className} record);
 
     /**
-     * ${className}Mapper.insertSelective
-     * Description: 插入一个只有部分字段的记录到${table.tableName}
+     * Description: 插入一个记录到${table.tableName}：忽略null字段
      *
-     * @param record 只含部分字段的${table.tableName}的bean对象
+     * @param record 插入的bean对象
      * @return int  插入个数
      */
     int insertSelective(${className} record);
 
     /**
-     * ${className}Mapper.selectByExample
-     * Description: 根据查询条件类，返回${table.tableName}结果集
+     * Description: 根据查询条件，返回${table.tableName}结果集
      *
-     * @param example 通用查询条件类
+     * @param example 查询条件
      * @return List<${className}>${table.tableName}结果集
      */
     List<${className}> selectByExample(Example example);
-
-    /**
-     * ${className}Mapper.selectByExample
-     * Description: 根据查询条件类，返回${table.tableName}结果集[分页查询]
-     *
-     * @param example 通用查询条件类
-     * @param rowBounds mybatis分页条件
-     * @return List<${className}>${table.tableName}结果集
-     */
-    List<${className}> selectByExample(Example example,RowBounds rowBounds);
 
 <#if table.pkCount == 1>
     /**
@@ -135,6 +119,15 @@ public interface ${className}Mapper extends BaseMapper<T> {
      * @return int 更新记录数
      */
     int updateByPrimaryKey(${className} record);
+
+    /**
+     * Description: 根据查询条件，返回${table.tableName}结果集，[分页查询]
+     *
+     * @param example 查询条件
+     * @param rowBounds mybatis分页条件
+     * @return List<${className}>${table.tableName}结果集
+     */
+    List<${className}> selectByExample(Example example,RowBounds rowBounds);
 
 </#if>
 }

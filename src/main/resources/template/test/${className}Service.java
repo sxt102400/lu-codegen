@@ -1,9 +1,9 @@
-package ${tpl@service.packageName};
+package ${@tpl_service.packageName};
 
 <#include "global.ftl">
 import java.util.List;
 
-import ${tpl@entity.packageName}.${className};
+import ${@tpl_entity.packageName}.${className};
 import ${page};
 
 /**

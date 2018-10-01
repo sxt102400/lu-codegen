@@ -36,6 +36,7 @@
 <!ELEMENT module EMPTY>
 <!ATTLIST module
         name CDATA #REQUIRED
+        moduleDir CDATA #IMPLIED
         sources CDATA #IMPLIED
         resources CDATA #IMPLIED
         templates CDATA #IMPLIED
@@ -54,7 +55,7 @@
 <!ELEMENT columnOverride EMPTY>
 <!ATTLIST columnOverride
         column CDATA #REQUIRED
-        property CDATA #IMPLIED
+        field CDATA #IMPLIED
         javaType CDATA #IMPLIED
         jdbcType CDATA #IMPLIED
         ignore CDATA #IMPLIED >

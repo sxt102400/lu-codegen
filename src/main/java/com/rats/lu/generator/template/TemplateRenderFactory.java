@@ -1,6 +1,5 @@
 package com.rats.lu.generator.template;
 
-
 /**
  * Copyright (C) 2016 
  * <p/>

@@ -1,5 +1,13 @@
 package com.rats.lu.generator.table;
 
+/**
+ * Copyright (C) 2016
+ * <p/>
+ *
+ * @author : hanbing
+ * @version : v1.0
+ * @since : 2016/12/12
+ */
 public class ColumnOverride {
     private String columnName;
     private String fieldName;

@@ -10,9 +10,9 @@ package com.rats.lu.generator.config;
  */
 public class ConstantConfig {
 
-    public static String DEFUAULT_SOURCE = "src/main/java";
+    public static String DEFAULT_SOURCES = "src/main/java";
 
-    public static String DEFUAULT_RESOURCE = "src/main/resource";
+    public static String DEFAULT_RESOURCES = "src/main/resource";
 
     public static String TYPE_XML = "XML";
 

@@ -10,7 +10,7 @@
 
         <!-- 工程和模板配置 -->
         <property name="projectName" value="myproject"></property>
-        <property name="projectDir" value="d://myproject"></property>
+        <property name="projectDir" value="../lu-generator"></property>
         <property name="templateDir" value="template/test"></property>
         <property name="override" value="true"></property>
     </properties>
@@ -29,15 +29,15 @@
         <template name="service" packageName="com.sxt.service" fileName="${className}Service.java"/>
         <template name="serviceImpl" packageName="com.sxt.service.impl" fileName="${className}ServiceImpl.java"/>
         <template name="dao" packageName="com.sxt.dao" fileName="${className}Dao.java"/>
-        <template name="mapper" packageName="com.sxt.mapper" fileName="${className}mapper.java"/>
-        <template name="entity" packageName="com.sxt.entity" fileName="${className}.java"/>
-        <template name="xmlMapper" packageName="com.sxt.mapper" fileName="${className}_Mapper.xml" type="xml"/>
+        <template name="mapper" packageName="gen.mapper" fileName="${className}mapper.java"/>
+        <template name="entity" packageName="gen.entity" fileName="${className}.java"/>
+        <template name="xmlMapper" packageName="gen.xml" fileName="${className}Mapper.xml" type="xml"/>
     </templates>
 
     <!-- 模块配置 -->
     <modules>
-        <module name="www-user-api"
-                isSub="false"
+        <module name="lu-project"
+                moduleDir=""
                 sources="src/main/java"
                 resources="src/main/resources"
                 templates="entity,mapper,dao,service,serviceImpl,controller,xmlMapper"
@@ -45,19 +45,11 @@
     </modules>
 
 
-    <!-- 配置需要生成代码的表，tableName：表名; className：类名 -->
+    <!-- 配置需要生成代码的表，tableName：表名; className：类名 ,subPackageName: 子包名称-->
     <tables>
         <table tableName="t_sys_user" className="SysUser">
-            <columnOverride column="id" field="myId"/>
-            <columnOverride column="type" field="myType"/>
-            <columnOverride column="username" field="MyTheuserName"/>
-            <columnOverride column="password" field="myPassword" ignore="true"/>
-            <columnOverride column="age" field="myAge"/>
         </table>
-        <table tableName="icy_role" className="Role"></table>
-        <table tableName="icy_funcright" className="Funcright"></table>
-        <table tableName="icy_menu" className="Menu"></table>
-        <table tableName="icy_user" className="User"></table>
+        <table tableName="t_sys_user_compk" className="SysUserCompk"></table>
         <table tableName="test" className="Test">
             <columnOverride column="testName"
                             field="username"

@@ -20,7 +20,7 @@ public class IntrospectedTable  extends TableConfiguration {
     protected String tableType;
     protected String tableNameAlias;
     protected int pkCount;
-
+    protected String fullName;
     /**
      * 表中所有列
      */
@@ -35,8 +35,6 @@ public class IntrospectedTable  extends TableConfiguration {
     public List<Column> notPkColumns = new ArrayList<Column>();
 
     public List<Column> blobColumns = new ArrayList<Column>();
-
-
 
     public String getRemark() {
         return remark;
@@ -100,5 +98,13 @@ public class IntrospectedTable  extends TableConfiguration {
 
     public void setPkCount(int pkCount) {
         this.pkCount = pkCount;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

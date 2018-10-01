@@ -1,7 +1,7 @@
 package com.rats.lu.generator.api;
 
 import com.rats.lu.generator.config.Configuration;
-import com.rats.lu.generator.config.ParserEntityResolver;
+import com.rats.lu.generator.xml.ParserEntityResolver;
 import com.rats.lu.generator.config.PropertyHolder;
 import com.rats.lu.generator.exception.XMLParserException;
 import com.rats.lu.generator.xml.ParserErrorHandler;

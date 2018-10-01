@@ -5,7 +5,7 @@
 <#assign page= "com.rats.framework.common.persistence.Page" >
 
 <#-- 主键类型 -->
-<#macro pkType><#list table.pkColumns as column>${column.javaType}<#if column_has_next>,</#if></#list></#macro>
+<#macro pkType><#list table.pkColumns as column>${column.fullJavaType}<#if column_has_next>,</#if></#list></#macro>
 <#-- 主键字段 -->
 <#macro pkField><#list table.pkColumns as column>${column.fieldName}<#if column_has_next>,</#if></#list></#macro>
 <#-- 主键类型和字段 -->
