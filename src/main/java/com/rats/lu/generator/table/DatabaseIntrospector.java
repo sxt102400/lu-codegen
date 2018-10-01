@@ -154,8 +154,9 @@ public class DatabaseIntrospector {
                     defaultValue = DbUtils.getColumnDefault(rs, databaseMetaData);   //该列默认值
                 }
                 boolean nullable = DatabaseMetaData.columnNullable == rs.getInt("NULLABLE");
-                boolean autoIncrement = "YES".equals(rs.getString("IS_AUTOINCREMENT"));
-                boolean generatedColumn = "YES".equals(rs.getString("IS_GENERATEDCOLUMN"));
+                boolean autoIncrement =  DbUtils.isColumnAutoincrement( rs,  databaseMetaData);
+                //boolean autoIncrement = "YES".equals(rs.getString("IS_AUTOINCREMENT"));
+                //boolean generatedColumn = "YES".equals(rs.getString("IS_GENERATEDCOLUMN"));
                 boolean pk = primaryKeys.contains(columnName);                // 是否主键
                 boolean isIndexInfo = indexInfos.contains(columnName);              // 是否索引
                 boolean indexUnique = indexUniques.contains(columnName);      // 是否唯一索引

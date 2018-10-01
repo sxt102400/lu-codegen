@@ -55,7 +55,6 @@ public class ConfigurationParser extends PropertyHolder {
             builder.setEntityResolver(new ParserEntityResolver());
             builder.setErrorHandler(handler);
             Document document = builder.parse(inputSource);
-
             Element rootNode = document.getDocumentElement();
             config = this.parseXmlConfiguration(rootNode);
         } catch (ParserConfigurationException e) {

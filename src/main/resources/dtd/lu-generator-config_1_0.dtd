@@ -54,7 +54,7 @@
 <!ELEMENT columnOverride EMPTY>
 <!ATTLIST columnOverride
         column CDATA #REQUIRED
-        field CDATA #IMPLIED
+        property CDATA #IMPLIED
         javaType CDATA #IMPLIED
         jdbcType CDATA #IMPLIED
         ignore CDATA #IMPLIED >
