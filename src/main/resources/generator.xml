@@ -23,7 +23,7 @@
     </jdbcConnection>
 
 
-    <!-- 模板文件配置 -->
+    <!-- 模板文件配置，此处按需自己定制编写 -->
     <templates>
         <template name="controller" packageName="com.sxt.controller" fileName="${className}Controller.java"/>
         <template name="service" packageName="com.sxt.service" fileName="${className}Service.java"/>
@@ -47,16 +47,25 @@
 
     <!-- 配置需要生成代码的表，tableName：表名; className：类名 ,subPackageName: 子包名称-->
     <tables>
-        <table tableName="t_sys_user" className="SysUser">
-        </table>
-        <table tableName="t_sys_user_compk" className="SysUserCompk"></table>
+        <table tableName="t_sys_user" className="SysUser"></table>
         <table tableName="test" className="Test">
+            <!-- all -->
             <columnOverride column="testName"
                             field="username"
-                            javaType="Long"
+                            javaType="java.lang.Long"
                             jdbcType="VARCHAR"
-                            ignore="true"
-            />
+                            ignore="true"/>
+
+            <!-- Override，覆盖的字段 -->
+            <columnOverride column="id" field="id"/>
+            <columnOverride column="type" field="atype"/>
+            <columnOverride column="username" field="ausername"/>
+            <columnOverride column="age" field="age"/>
+
+            <!-- ignore，忽略的字段 -->
+            <columnOverride column="password"  ignore="true"/>
+            <columnOverride column="status" ignore="true"/>
+
         </table>
     </tables>
 

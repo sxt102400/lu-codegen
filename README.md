@@ -25,7 +25,7 @@
 
 **1. 工程导入**
 
-为方便使用，此生成器项目下载后，可将生成器作为当前开发项目的一个maven子模块使用。
+为方便使用，此生成器项目下载后，可将生成器工程配置为当前工程的子模块。作为一个maven子模块使用。
 
 
 
@@ -61,7 +61,7 @@
     </jdbcConnection>
 
 
-    <!-- 模板文件配置 -->
+    <!-- 模板文件配置，此处按需自己定制编写 -->
     <templates>
         <template name="controller" packageName="com.sxt.controller" fileName="${className}Controller.java"/>
         <template name="service" packageName="com.sxt.service" fileName="${className}Service.java"/>
@@ -74,7 +74,7 @@
 
     <!-- 模块配置 -->
     <modules>
-        <module name="lu-project"
+        <module name="lu"
                 moduleDir=""
                 sources="src/main/java"
                 resources="src/main/resources"
@@ -95,13 +95,14 @@
                             javaType="java.lang.Long"
                             jdbcType="VARCHAR"
                             ignore="true"/>
-            <!-- Override -->
+            
+            <!-- Override，覆盖的字段 -->
             <columnOverride column="id" field="id"/> 
 			<columnOverride column="type" field="type"/>
 			<columnOverride column="username" field="username"/>
             <columnOverride column="age" field="age"/>
             
-            <!-- ignore -->
+            <!-- ignore，忽略的字段 -->
 			<columnOverride column="password"  ignore="true"/>   
             <columnOverride column="status" ignore="true"/> 
           
