@@ -89,7 +89,7 @@ public class DatabaseIntrospector {
                 if (columnOverride.isSerialize()) {
                    //NOTHING
                 }
-                if (!columnOverride.isIgnore()) {
+                if (!columnOverride.isIgnore() && !tableConfiguration.isColumnIngore(columnOverride.getColumnName())) {
                     columnList.add(introspectedColumn);
                 }
             }else{

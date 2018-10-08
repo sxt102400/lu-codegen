@@ -10,9 +10,9 @@
 
         <!-- 工程和模板配置 -->
         <property name="projectName" value="myproject"></property>
-        <property name="projectDir" value="../lu-generator"></property>
+        <property name="projectDir" value="../"></property>
         <property name="templateDir" value="template/test"></property>
-        <property name="override" value="true"></property>
+		<property name="override" value="false"></property>
     </properties>
 
     <!-- jdbc配置 -->
@@ -62,11 +62,13 @@
             <columnOverride column="username" field="ausername"/>
             <columnOverride column="age" field="age"/>
 
-            <!-- ignore，忽略的字段 -->
-            <columnOverride column="password"  ignore="true"/>
-            <columnOverride column="status" ignore="true"/>
+            <!-- Ignore，忽略的字段 -->
+            <columnIgnore column="password" />
+            <columnIgnore column="status"/>
 
         </table>
     </tables>
+
+
 
 </configuration>

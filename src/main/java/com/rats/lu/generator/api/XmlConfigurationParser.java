@@ -148,7 +148,7 @@ public class XmlConfigurationParser {
                     tableConfiguration.setSubPackageName(subPackageName);
                     tableConfiguration.setCatalog(catalog);
                     tableConfiguration.setSchema(schema);
-                    parseTable(tableConfiguration, childNode);
+                    parseColumns(tableConfiguration, childNode);
                     configuration.addTableConfiguration(tableConfiguration);
 
                 }
@@ -156,13 +156,16 @@ public class XmlConfigurationParser {
         }
     }
 
-    protected void parseTable(TableConfiguration tableConfiguration, Node node) throws XMLParserException {
+    protected void parseColumns(TableConfiguration tableConfiguration, Node node) throws XMLParserException {
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); ++i) {
             Node childNode = nodeList.item(i);
             if (childNode.getNodeType() == 1) {
-                if ("columnOverride".equals(childNode.getNodeName())) {
+                if ("columnOverride".equalsIgnoreCase(childNode.getNodeName())) {
                     this.parseColumnOverride(tableConfiguration, childNode);
+                }
+                if ("columnIgnore".equalsIgnoreCase(childNode.getNodeName())) {
+                    this.parsColumnIgnore(tableConfiguration, childNode);
                 }
             }
         }
@@ -189,7 +192,22 @@ public class XmlConfigurationParser {
         if (StringUtils.isNotBlank(serialize)) {
             columnOverride.setIgnore(Boolean.valueOf(serialize));
         }
-        tableConfiguration.addColumnOverride(columnOverride);
+        if (Boolean.valueOf(ignore)) {
+            tableConfiguration.addColumnIgnore(columnOverride);
+        } else {
+            tableConfiguration.addColumnOverride(columnOverride);
+        }
+
+    }
+
+
+    protected void parsColumnIgnore(TableConfiguration tableConfiguration, Node node) throws XMLParserException {
+        Properties attributes = this.parseAttributes(node);
+        String column = attributes.getProperty("column");
+        ColumnOverride columnOverride = new ColumnOverride();
+        columnOverride.setColumnName(column);
+        columnOverride.setIgnore(true);
+        tableConfiguration.addColumnIgnore(columnOverride);
     }
 
     /**

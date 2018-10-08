@@ -44,7 +44,7 @@
 
 
 <!ELEMENT tables (table*)>
-<!ELEMENT table (columnOverride*)>
+<!ELEMENT table (columnOverride*, columnIgnore*)>
 <!ATTLIST table
         tableName CDATA #REQUIRED
         className CDATA #IMPLIED
@@ -60,3 +60,7 @@
         jdbcType CDATA #IMPLIED
         ignore CDATA #IMPLIED >
 
+<!ELEMENT columnIgnore EMPTY>
+<!ATTLIST columnIgnore
+        column CDATA #REQUIRED
+>

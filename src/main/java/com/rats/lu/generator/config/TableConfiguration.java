@@ -27,8 +27,11 @@ public class TableConfiguration extends PropertyHolder {
 
     protected List<ColumnOverride> columnOverrides;
 
+    protected List<ColumnOverride> columnIgnores;
+
     public TableConfiguration() {
         this.columnOverrides = new ArrayList();
+        this.columnIgnores = new ArrayList();
     }
 
     public String getTableName() {
@@ -79,6 +82,14 @@ public class TableConfiguration extends PropertyHolder {
         this.columnOverrides.add(columnOverride);
     }
 
+    public List<ColumnOverride> getColumnIgnores() {
+        return columnIgnores;
+    }
+
+    public void addColumnIgnore(ColumnOverride columnIgnores) {
+        this.columnIgnores.add(columnIgnores);
+    }
+
     public ColumnOverride getColumnOverride(String columnName) {
         for (ColumnOverride columnOverride : columnOverrides) {
             if (columnName != null && columnName.equalsIgnoreCase(columnOverride.getColumnName())) {
@@ -88,5 +99,14 @@ public class TableConfiguration extends PropertyHolder {
         return null;
     }
 
+
+    public boolean isColumnIngore(String columnName) {
+        for (ColumnOverride columnIgnore : columnIgnores) {
+            if (columnName.equalsIgnoreCase(columnIgnore.getColumnName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
